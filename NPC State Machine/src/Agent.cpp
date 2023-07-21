@@ -13,6 +13,7 @@ namespace AIForGames
 		, m_nodeMap(nodeMap)
 		, m_color({ 255, 255, 0, 255 })
 	{
+		m_pathAgent.SetNodeMap(m_nodeMap);
 		m_current->Enter(this);
 		m_target = nullptr;
 	}
@@ -32,7 +33,7 @@ namespace AIForGames
 
 	void Agent::Draw()
 	{
-		DrawCircle((int)m_pathAgent.GetPosition().x, (int)m_pathAgent.GetPosition().y, 16, m_color);
+		DrawCircle((int)m_pathAgent.GetPosition().x, (int)m_pathAgent.GetPosition().y, m_size, m_color);
 	}
 
 	void Agent::Reset()

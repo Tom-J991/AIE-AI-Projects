@@ -6,6 +6,8 @@
 
 namespace AIForGames
 {
+	class NodeMap;
+
 	class PathAgent
 	{
 	public:
@@ -13,6 +15,8 @@ namespace AIForGames
 
 		void Update(float deltaTime);
 		void Draw();
+
+		void SetNodeMap(NodeMap *nodeMap) { m_nodeMap = nodeMap; }
 
 		void SetNode(Node *node) { m_currentNode = node; m_position = node->position; }
 		void SetSpeed(float speed) { m_speed = speed; }
@@ -26,6 +30,8 @@ namespace AIForGames
 
 		int m_currentIndex;
 		Node *m_currentNode;
+
+		NodeMap *m_nodeMap;
 
 		glm::vec2 m_position;
 		float m_speed = 256;

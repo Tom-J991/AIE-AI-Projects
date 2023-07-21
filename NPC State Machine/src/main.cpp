@@ -34,15 +34,23 @@ int main()
     NodeMap nodeMap;
 
     std::vector<std::string> asciiMap;
-    asciiMap.push_back("000000000000");
-    asciiMap.push_back("010111011100");
-    asciiMap.push_back("010101110110");
-    asciiMap.push_back("010100000000");
-    asciiMap.push_back("010111111110");
-    asciiMap.push_back("010000001000");
-    asciiMap.push_back("011111111110");
-    asciiMap.push_back("000000000000");
+    asciiMap.push_back("0000000000000000000000000");
+    asciiMap.push_back("0111011111111111111111110");
+    asciiMap.push_back("0111011111111111111111110");
+    asciiMap.push_back("0111011000000000000000010");
+    asciiMap.push_back("0111011111111101111111110");
+    asciiMap.push_back("0111011111111101110000000");
+    asciiMap.push_back("0111011111011101111111110");
+    asciiMap.push_back("0111011111011100000011110");
+    asciiMap.push_back("0111011111011111111111110");
+    asciiMap.push_back("0111111111000000000000110");
+    asciiMap.push_back("0111101111011111111111110");
+    asciiMap.push_back("0111101111011111111111110");
+    asciiMap.push_back("0111101111011111111111110");
+    asciiMap.push_back("0111101111111111111111110");
+    asciiMap.push_back("0000000000000000000000000");
 
+    nodeMap.SetCellSize(32);
     nodeMap.Initialize(asciiMap);
 
     Node *start = nodeMap.GetNode(1, 1);
@@ -51,10 +59,12 @@ int main()
     Agent agent(&nodeMap, new GotoPointBehaviour());
     agent.SetNode(start);
     agent.SetColor(WHITE);
+    agent.SetSize(8);
 
     Agent agent2(&nodeMap, new WanderBehaviour());
     agent2.SetNode(nodeMap.GetRandomNode());
     agent2.SetColor(YELLOW);
+    agent2.SetSize(8);
 
     /*DistanceCondition *closerThan5 = new DistanceCondition(5.0f * nodeMap.GetCellSize(), true);
     DistanceCondition *furtherThan5 = new DistanceCondition(5.0f * nodeMap.GetCellSize(), false);
@@ -77,6 +87,7 @@ int main()
     agent3.SetTarget(&agent);
     agent3.SetSpeed(128);
     agent3.SetColor(PINK);
+    agent3.SetSize(8);
 
     // Main game loop
     float time = (float)GetTime();

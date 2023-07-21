@@ -44,12 +44,25 @@ namespace AIForGames
 						node->ConnectTo(nodeWest, 10); // TODO: weights
 						nodeWest->ConnectTo(node, 10);
 					}
-
 					Node *nodeSouth = y == 0 ? nullptr : GetNode(x, y - 1);
 					if (nodeSouth)
 					{
 						node->ConnectTo(nodeSouth, 10); // TODO: weights
 						nodeSouth->ConnectTo(node, 10);
+					}
+
+					// Diagonals
+					Node *nodeSouthWest = (x == 0 || y == 0) ? nullptr : GetNode(x-1, y-1);
+					if (nodeSouthWest)
+					{
+						node->ConnectTo(nodeSouthWest, 10.f * 1.414f);
+						nodeSouthWest->ConnectTo(node, 10.f * 1.414f);
+					}
+					Node *nodeSouthEast = (x == m_width-1 || y == 0) ? nullptr : GetNode(x+1, y-1);
+					if (nodeSouthEast)
+					{
+						node->ConnectTo(nodeSouthEast, 10.f * 1.414f);
+						nodeSouthEast->ConnectTo(node, 10.f * 1.414f);
 					}
 				}
 			}
@@ -105,7 +118,44 @@ namespace AIForGames
 
 	}
 
-	std::vector<Node *> NodeMap::AStarSearch(Node *startNode, Node *endNode, std::function<float(Node*, Node*)> heuristicFunc)
+	bool NodeMap::IsVisibleFrom(Node *start, Node *end)
+	{
+		glm::vec2 delta = end->position - start->position;
+		float distance = glm::distance(end->position, start->position);
+		delta = delta * (m_cellSize/distance);
+
+		for (float cells = 1.0f; cells < distance/m_cellSize; cells += 1.0f)
+		{
+			glm::vec2 testPos = start->position + (delta * cells);
+			if (GetClosestNode(testPos) == nullptr)
+				return false;
+		}
+
+		return true;
+	}
+
+	std::vector<Node*> NodeMap::SmoothPath(std::vector<Node*> path)
+	{
+		if (path.size() == 0)
+			return path;
+
+		std::vector<Node*> smoothed;
+
+		Node *start = path[0];
+		smoothed.push_back(start);
+
+		for (int i = 0; i < path.size(); ++i)
+		{
+			while (i < path.size() - 1 && IsVisibleFrom(start, path[i + 1]))
+				i++;
+			start = path[i];
+			smoothed.push_back(start);
+		}
+
+		return smoothed;
+	}
+
+	std::vector<Node*> NodeMap::AStarSearch(Node *startNode, Node *endNode, std::function<float(Node*, Node*)> heuristicFunc)
 	{
 		if (startNode == nullptr || endNode == nullptr)
 		{

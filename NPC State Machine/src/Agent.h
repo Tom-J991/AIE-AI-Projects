@@ -45,12 +45,15 @@ namespace AIForGames
 
 		void SetColor(Color color) { m_color = color; }
 
+		void SetSize(float size) { m_size = size; }
+
 	private:
 		Agent *m_target;
 		PathAgent m_pathAgent;
 		Behaviour *m_current;
 		NodeMap *m_nodeMap;
 		Color m_color;
+		float m_size = 16;
 
 	};
 
