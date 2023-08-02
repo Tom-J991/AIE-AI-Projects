@@ -22,10 +22,11 @@
     <ClCompile Include="src\Agent.cpp" />
     <ClCompile Include="src\Behaviours\Follow\FollowBehaviour.cpp" />
     <ClCompile Include="src\Behaviours\GotoPoint\GotoPointBehaviour.cpp" />
+    <ClCompile Include="src\Behaviours\PlayerMovement\PlayerMovementBehaviour.cpp" />
     <ClCompile Include="src\Behaviours\Selector\SelectorBehaviour.cpp" />
     <ClCompile Include="src\Behaviours\UtilityAI.cpp" />
     <ClCompile Include="src\Behaviours\Wander\WanderBehaviour.cpp" />
-    <ClCompile Include="src\Conditions\Distance\DistanceCondition.cpp" />
+    <ClCompile Include="src\Behaviours\Conditions\Distance\DistanceCondition.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\NodeMap.cpp" />
     <ClCompile Include="src\PathAgent.cpp" />
@@ -38,14 +39,15 @@
     <ClInclude Include="src\Behaviours\Behaviour.h" />
     <ClInclude Include="src\Behaviours\Follow\FollowBehaviour.h" />
     <ClInclude Include="src\Behaviours\GotoPoint\GotoPointBehaviour.h" />
+    <ClInclude Include="src\Behaviours\PlayerMovement\PlayerMovementBehaviour.h" />
     <ClInclude Include="src\Behaviours\Selector\SelectorBehaviour.h" />
     <ClInclude Include="src\Behaviours\UtilityAI.h" />
     <ClInclude Include="src\Behaviours\Wander\WanderBehaviour.h" />
-    <ClInclude Include="src\Conditions\Distance\DistanceCondition.h" />
+    <ClInclude Include="src\Behaviours\Conditions\Distance\DistanceCondition.h" />
     <ClInclude Include="src\NodeMap.h" />
     <ClInclude Include="src\PathAgent.h" />
     <ClInclude Include="src\Pathfinding.h" />
-    <ClInclude Include="src\Conditions\Condition.h" />
+    <ClInclude Include="src\Behaviours\Conditions\Condition.h" />
     <ClInclude Include="src\Behaviours\FiniteStateMachine.h" />
     <ClInclude Include="src\Behaviours\State.h" />
   </ItemGroup>

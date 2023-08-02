@@ -7,6 +7,13 @@ struct Color;
 
 namespace AIForGames
 {
+    enum class NodeType
+    {
+        NORMAL = 0,
+        TELEPORT = 1,
+        NODE_MAX
+    };
+
     struct Node;
 
     struct Edge {
@@ -28,6 +35,7 @@ namespace AIForGames
         float fScore;
         Node *previous;
         std::vector<Edge> connections;
+        NodeType type = NodeType::NORMAL;
 
         void ConnectTo(Node *other, float cost);
 

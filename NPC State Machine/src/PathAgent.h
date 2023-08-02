@@ -24,6 +24,9 @@ namespace AIForGames
 		std::vector<Node*> &GetPath() { return m_path; }
 
 		glm::vec2 GetPosition() const { return m_position; }
+		void SetPosition(glm::vec2 position) { m_position = position; }
+
+		Node *GetCurrentNode() const { return m_currentNode; }
 
 	private:
 		std::vector<Node*> m_path;

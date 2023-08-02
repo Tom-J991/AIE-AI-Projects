@@ -7,7 +7,7 @@ namespace AIForGames
 	void PathAgent::GoToNode(Node *node)
 	{
 		m_path = NodeMap::AStarSearch(m_currentNode, node, NodeMap::Heuristic);
-		m_path = m_nodeMap->SmoothPath(m_path);
+		//m_path = m_nodeMap->SmoothPath(m_path);
 		m_currentIndex = 0;
 	}
 

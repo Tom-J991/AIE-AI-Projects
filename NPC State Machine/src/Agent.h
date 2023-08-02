@@ -41,11 +41,15 @@ namespace AIForGames
 		NodeMap *GetNodeMap() const { return m_nodeMap; }
 
 		void SetSpeed(float speed) { m_pathAgent.SetSpeed(speed); }
+
 		glm::vec2 GetPosition() const { return m_pathAgent.GetPosition(); }
+		void SetPosition(glm::vec2 position) { m_pathAgent.SetPosition(position); }
 
 		void SetColor(Color color) { m_color = color; }
 
 		void SetSize(float size) { m_size = size; }
+
+		Node *GetCurrentNode() const { return m_pathAgent.GetCurrentNode(); }
 
 	private:
 		Agent *m_target;

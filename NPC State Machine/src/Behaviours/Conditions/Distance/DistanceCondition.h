@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Conditions/Condition.h"
+#include "Behaviours/Conditions/Condition.h"
 
 namespace AIForGames
 {

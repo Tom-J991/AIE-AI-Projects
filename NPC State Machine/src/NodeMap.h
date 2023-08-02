@@ -28,6 +28,9 @@ namespace AIForGames
 		void SetCellSize(float cellSize) { m_cellSize = cellSize; }
 		float GetCellSize() const { return m_cellSize; }
 
+		int GetWidth() const { return m_width * m_cellSize; }
+		int GetHeight() const { return m_height  * m_cellSize; }
+
 		static std::vector<Node*> AStarSearch(Node *startNode, Node *endNode, std::function<float(Node*, Node*)> heuristicFunc);
 		static float Heuristic(Node *startNode, Node *endNode);
 

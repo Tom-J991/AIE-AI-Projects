@@ -45,13 +45,16 @@
     <ClCompile Include="src\Behaviours\FiniteStateMachine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Conditions\Distance\DistanceCondition.cpp">
+    <ClCompile Include="src\Behaviours\Conditions\Distance\DistanceCondition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Behaviours\UtilityAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Behaviours\Selector\SelectorBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Behaviours\PlayerMovement\PlayerMovementBehaviour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,7 +83,7 @@
     <ClInclude Include="src\Behaviours\Follow\FollowBehaviour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Conditions\Condition.h">
+    <ClInclude Include="src\Behaviours\Conditions\Condition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Behaviours\State.h">
@@ -89,13 +92,16 @@
     <ClInclude Include="src\Behaviours\FiniteStateMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Conditions\Distance\DistanceCondition.h">
+    <ClInclude Include="src\Behaviours\Conditions\Distance\DistanceCondition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Behaviours\UtilityAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Behaviours\Selector\SelectorBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Behaviours\PlayerMovement\PlayerMovementBehaviour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

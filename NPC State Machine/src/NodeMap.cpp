@@ -12,6 +12,8 @@ namespace AIForGames
 	void NodeMap::Initialize(std::vector<std::string> asciiMap)
 	{
 		const char emptySquare = '0';
+		const char normalSquare = '1';
+		const char teleportSquare = '4';
 
 		m_height = asciiMap.size();
 		m_width = asciiMap[0].size();
@@ -27,7 +29,15 @@ namespace AIForGames
 			for (int x = 0; x < m_width; ++x)
 			{
 				char tile = x < line.size() ? line[x] : emptySquare;
-				m_nodes[x + m_width * y] = tile == emptySquare ? nullptr : new Node(((float)x + 0.5f) * m_cellSize, ((float)y + 0.5f) * m_cellSize);
+				if (tile == emptySquare)
+					m_nodes[x + m_width * y] = nullptr;
+				else if (tile == teleportSquare)
+				{
+					m_nodes[x + m_width * y] = new Node(((float)x + 0.5f) * m_cellSize, ((float)y + 0.5f) * m_cellSize);
+					m_nodes[x + m_width * y]->type = NodeType::TELEPORT;
+				}
+				else
+					m_nodes[x + m_width * y] = new Node(((float)x + 0.5f) * m_cellSize, ((float)y + 0.5f) * m_cellSize);
 			}
 		}
 
@@ -52,7 +62,7 @@ namespace AIForGames
 					}
 
 					// Diagonals
-					Node *nodeSouthWest = (x == 0 || y == 0) ? nullptr : GetNode(x-1, y-1);
+					/*Node *nodeSouthWest = (x == 0 || y == 0) ? nullptr : GetNode(x-1, y-1);
 					if (nodeSouthWest)
 					{
 						node->ConnectTo(nodeSouthWest, 10.f * 1.414f);
@@ -63,7 +73,7 @@ namespace AIForGames
 					{
 						node->ConnectTo(nodeSouthEast, 10.f * 1.414f);
 						nodeSouthEast->ConnectTo(node, 10.f * 1.414f);
-					}
+					}*/
 				}
 			}
 		}
@@ -103,7 +113,7 @@ namespace AIForGames
 				Node *node = GetNode(x, y);
 				if (!node)
 				{
-					DrawRectangle((int)(x * m_cellSize), (int)(y * m_cellSize), (int)m_cellSize - 1, (int)m_cellSize - 1, cellColor);
+					//DrawRectangle((int)(x * m_cellSize), (int)(y * m_cellSize), (int)m_cellSize - 1, (int)m_cellSize - 1, cellColor);
 				}
 				else
 				{
