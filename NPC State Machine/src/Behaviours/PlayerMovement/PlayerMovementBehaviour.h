@@ -10,7 +10,8 @@ namespace AIForGames
 
 	enum class MOVE_DIRECTIONS
 	{
-		LEFT = 0,
+		NONE = 0,
+		LEFT,
 		RIGHT,
 		DOWN,
 		UP,
@@ -28,6 +29,10 @@ namespace AIForGames
 
 	private:
 		Node *FindLastNodeInDirection(Agent *agent, MOVE_DIRECTIONS direction);
+		bool IsPathBlockedInDirection(Agent *agent, MOVE_DIRECTIONS direction);
+
+	private:
+		MOVE_DIRECTIONS m_inputDir;
 
 	};
 

@@ -16,53 +16,34 @@ namespace AIForGames
 
     void PlayerMovementBehaviour::Update(Agent *agent, float deltaTime)
 	{
+        // Handle Input
         if (IsKeyPressed(KEY_LEFT))
         {
-            Node *point = FindLastNodeInDirection(agent, MOVE_DIRECTIONS::LEFT);
-            if (point)
-                agent->GoToNode(point);
+            m_inputDir = MOVE_DIRECTIONS::LEFT;
         }
         if (IsKeyPressed(KEY_RIGHT))
         {
-            Node *point = FindLastNodeInDirection(agent, MOVE_DIRECTIONS::RIGHT);
-            if (point)
-                agent->GoToNode(point);
+            m_inputDir = MOVE_DIRECTIONS::RIGHT;
         }
         if (IsKeyPressed(KEY_DOWN))
         {
-            Node *point = FindLastNodeInDirection(agent, MOVE_DIRECTIONS::DOWN);
-            if (point)
-                agent->GoToNode(point);
+            m_inputDir = MOVE_DIRECTIONS::DOWN;
         }
         if (IsKeyPressed(KEY_UP))
         {
-            Node *point = FindLastNodeInDirection(agent, MOVE_DIRECTIONS::UP);
-            if (point)
-                agent->GoToNode(point);
+            m_inputDir = MOVE_DIRECTIONS::UP;
         }
 
-        Node *currentNode = agent->GetNodeMap()->GetClosestNode(agent->GetPosition());
-        if (currentNode)
+        // Handle Movement
+        if (m_inputDir != MOVE_DIRECTIONS::NONE)
         {
-            if (currentNode->type == NodeType::TELEPORT && agent->GetCurrentNode() == currentNode && !agent->PathComplete())
+            if (IsPathBlockedInDirection(agent, m_inputDir)) // Avoids cancelling current movement if path is null.
+                return;
+            Node *point = FindLastNodeInDirection(agent, m_inputDir); // Finds last node by incrementing in direction until it is blocked.
+            if (point)
             {
-                glm::vec2 pos = agent->GetPosition();
-                Node *nextNode = nullptr;
-                if (currentNode == agent->GetNodeMap()->GetClosestNode({ agent->GetNodeMap()->GetWidth()-1, pos.y }))
-                {
-                    pos.x = 0;
-                    nextNode = agent->GetNodeMap()->GetClosestNode({ 1, pos.y });
-                }
-                if (currentNode == agent->GetNodeMap()->GetClosestNode({ 0, pos.y }))
-                {
-                    pos.x = agent->GetNodeMap()->GetWidth()-1;
-                    nextNode = agent->GetNodeMap()->GetClosestNode({ agent->GetNodeMap()->GetWidth()-1, pos.y });
-                }
-                agent->SetPosition(pos);
-                if (nextNode)
-                {
-                    agent->GoToNode(nextNode);
-                }
+                agent->GoToNode(point);
+                m_inputDir = MOVE_DIRECTIONS::NONE;
             }
         }
 	}
@@ -78,6 +59,7 @@ namespace AIForGames
 
     Node *PlayerMovementBehaviour::FindLastNodeInDirection(Agent *agent, MOVE_DIRECTIONS direction)
     {
+        // Increments in the specified direction until it is blocked by a wall, returns the last node in that direction.
         Node *foundPoint = nullptr;
         glm::vec2 start = agent->GetPosition();
         switch (direction)
@@ -88,7 +70,7 @@ namespace AIForGames
                 while (agent->GetNodeMap()->GetClosestNode(point) != nullptr)
                 {
                     foundPoint = agent->GetNodeMap()->GetClosestNode(point);
-                    point.x -= 1;
+                    point.x -= agent->GetNodeMap()->GetCellSize();
                 }
             } break;
             case MOVE_DIRECTIONS::RIGHT:
@@ -97,7 +79,7 @@ namespace AIForGames
                 while (agent->GetNodeMap()->GetClosestNode(point) != nullptr)
                 {
                     foundPoint = agent->GetNodeMap()->GetClosestNode(point);
-                    point.x += 1;
+                    point.x += agent->GetNodeMap()->GetCellSize();
                 }
             } break;
             case MOVE_DIRECTIONS::DOWN:
@@ -106,7 +88,7 @@ namespace AIForGames
                 while (agent->GetNodeMap()->GetClosestNode(point) != nullptr)
                 {
                     foundPoint = agent->GetNodeMap()->GetClosestNode(point);
-                    point.y += 1;
+                    point.y += agent->GetNodeMap()->GetCellSize();
                 }
             } break;
             case MOVE_DIRECTIONS::UP:
@@ -115,12 +97,52 @@ namespace AIForGames
                 while (agent->GetNodeMap()->GetClosestNode(point) != nullptr)
                 {
                     foundPoint = agent->GetNodeMap()->GetClosestNode(point);
-                    point.y -= 1;
+                    point.y -= agent->GetNodeMap()->GetCellSize();
                 }
             } break;
             default: break;
         }
         return foundPoint;
+    }
+
+    bool PlayerMovementBehaviour::IsPathBlockedInDirection(Agent *agent, MOVE_DIRECTIONS direction)
+    {
+        // If point right next to the player is nullptr then the path is null.
+        bool blocked = false;
+        glm::vec2 start = agent->GetPosition();
+        switch (direction)
+        {
+            case MOVE_DIRECTIONS::LEFT:
+            {
+                glm::vec2 point = start;
+                point.x -= agent->GetNodeMap()->GetCellSize();
+                if (agent->GetNodeMap()->GetClosestNode(point) == nullptr)
+                    blocked = true;
+            } break;
+            case MOVE_DIRECTIONS::RIGHT:
+            {
+                glm::vec2 point = start;
+                point.x += agent->GetNodeMap()->GetCellSize();
+                if (agent->GetNodeMap()->GetClosestNode(point) == nullptr)
+                    blocked = true;
+            } break;
+            case MOVE_DIRECTIONS::DOWN:
+            {
+                glm::vec2 point = start;
+                point.y += agent->GetNodeMap()->GetCellSize();
+                if (agent->GetNodeMap()->GetClosestNode(point) == nullptr)
+                    blocked = true;
+            } break;
+            case MOVE_DIRECTIONS::UP:
+            {
+                glm::vec2 point = start;
+                point.y -= agent->GetNodeMap()->GetCellSize();
+                if (agent->GetNodeMap()->GetClosestNode(point) == nullptr)
+                    blocked = true;
+            } break;
+            default: break;
+        }
+        return blocked;
     }
 
 }
