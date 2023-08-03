@@ -2,20 +2,23 @@
 
 #include "NodeMap.h"
 
+#include <glm/glm.hpp>
+
 namespace AIForGames
 {
 	void PathAgent::GoToNode(Node *node)
 	{
-		m_path = NodeMap::AStarSearch(m_currentNode, node, NodeMap::Heuristic);
-		//m_path = m_nodeMap->SmoothPath(m_path);
+		m_path = NodeMap::AStarSearch(m_currentNode, node, NodeMap::Heuristic); // Get path from pathfinding algorithm
+		//m_path = m_nodeMap->SmoothPath(m_path); // Unused
 		m_currentIndex = 0;
 	}
 
 	void PathAgent::Update(float deltaTime)
 	{
-		if (m_path.empty())
+		if (m_path.empty()) // If no path, no need to move.
 			return;
 
+		// Moves along path.
 		glm::vec2 dir = glm::normalize((m_currentNode->position - m_position));
 		float dist = glm::distance(m_position, m_currentNode->position);
 		dist -= m_speed * deltaTime;

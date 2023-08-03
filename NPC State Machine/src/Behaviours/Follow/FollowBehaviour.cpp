@@ -7,7 +7,6 @@ namespace AIForGames
 {
 	void FollowBehaviour::Enter(Agent *agent)
 	{
-		agent->SetColor({ 255, 0, 0, 255 });
 		agent->Reset();
 	}
 
@@ -31,14 +30,7 @@ namespace AIForGames
 
 	float FollowBehaviour::Evaluate(Agent *agent)
 	{
-		Agent *target = agent->GetTarget();
-		float dist = glm::distance(target->GetPosition(), agent->GetPosition());
-
-		float eval = 10 * agent->GetNodeMap()->GetCellSize() - dist;
-		if (eval < 0)
-			eval = 0;
-
-		return eval;
+		return 0.0f;
 	}
 
 }

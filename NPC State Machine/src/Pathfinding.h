@@ -10,7 +10,6 @@ namespace AIForGames
     enum class NodeType
     {
         NORMAL = 0,
-        TELEPORT = 1,
         NODE_MAX
     };
 
@@ -30,12 +29,15 @@ namespace AIForGames
         Node(float x, float y) { position = glm::vec2(x, y); }
 
         glm::vec2 position;
+
         float gScore;
         float hScore;
         float fScore;
+
         Node *previous;
         std::vector<Edge> connections;
-        NodeType type = NodeType::NORMAL;
+
+        NodeType type = NodeType::NORMAL; // Node type, can be used for specific gameplay mechanics when an agent reaches a particular node
 
         void ConnectTo(Node *other, float cost);
 

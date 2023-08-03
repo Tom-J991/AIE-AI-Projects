@@ -11,9 +11,9 @@ namespace AIForGames
 {
 	void NodeMap::Initialize(std::vector<std::string> asciiMap)
 	{
+		// Create node map from ascii
 		const char emptySquare = '0';
 		const char normalSquare = '1';
-		const char teleportSquare = '4';
 
 		m_height = asciiMap.size();
 		m_width = asciiMap[0].size();
@@ -23,24 +23,21 @@ namespace AIForGames
 		for (int y = 0; y < m_height; ++y)
 		{
 			std::string &line = asciiMap[y];
-			if (line.size() != m_width)
+			if (line.size() != m_width) // If a line is inconsistent with the rest.
 				std::cout << "Mismatched line #" << y << " in ASCII map (" << line.size() << " instead of " << m_width << ")" << std::endl;
 
 			for (int x = 0; x < m_width; ++x)
 			{
+				// Create nodes
 				char tile = x < line.size() ? line[x] : emptySquare;
 				if (tile == emptySquare)
 					m_nodes[x + m_width * y] = nullptr;
-				else if (tile == teleportSquare)
-				{
-					m_nodes[x + m_width * y] = new Node(((float)x + 0.5f) * m_cellSize, ((float)y + 0.5f) * m_cellSize);
-					m_nodes[x + m_width * y]->type = NodeType::TELEPORT;
-				}
 				else
 					m_nodes[x + m_width * y] = new Node(((float)x + 0.5f) * m_cellSize, ((float)y + 0.5f) * m_cellSize);
 			}
 		}
 
+		// Connect nodes
 		for (int y = 0; y < m_height; ++y)
 		{
 			for (int x = 0; x < m_width; ++x)
@@ -51,28 +48,28 @@ namespace AIForGames
 					Node *nodeWest = x == 0 ? nullptr : GetNode(x - 1, y);
 					if (nodeWest)
 					{
-						node->ConnectTo(nodeWest, 10); // TODO: weights
-						nodeWest->ConnectTo(node, 10);
+						node->ConnectTo(nodeWest, 1.f);
+						nodeWest->ConnectTo(node, 1.f);
 					}
 					Node *nodeSouth = y == 0 ? nullptr : GetNode(x, y - 1);
 					if (nodeSouth)
 					{
-						node->ConnectTo(nodeSouth, 10); // TODO: weights
-						nodeSouth->ConnectTo(node, 10);
+						node->ConnectTo(nodeSouth, 1.f);
+						nodeSouth->ConnectTo(node, 1.f);
 					}
 
-					// Diagonals
+					// Diagonals (Unused)
 					/*Node *nodeSouthWest = (x == 0 || y == 0) ? nullptr : GetNode(x-1, y-1);
 					if (nodeSouthWest)
 					{
-						node->ConnectTo(nodeSouthWest, 10.f * 1.414f);
-						nodeSouthWest->ConnectTo(node, 10.f * 1.414f);
+						node->ConnectTo(nodeSouthWest, 1.f * 1.414f);
+						nodeSouthWest->ConnectTo(node, 1.f * 1.414f);
 					}
 					Node *nodeSouthEast = (x == m_width-1 || y == 0) ? nullptr : GetNode(x+1, y-1);
 					if (nodeSouthEast)
 					{
-						node->ConnectTo(nodeSouthEast, 10.f * 1.414f);
-						nodeSouthEast->ConnectTo(node, 10.f * 1.414f);
+						node->ConnectTo(nodeSouthEast, 1.f * 1.414f);
+						nodeSouthEast->ConnectTo(node, 1.f * 1.414f);
 					}*/
 				}
 			}
@@ -113,10 +110,12 @@ namespace AIForGames
 				Node *node = GetNode(x, y);
 				if (!node)
 				{
+					// Draws walls, (Unused)
 					//DrawRectangle((int)(x * m_cellSize), (int)(y * m_cellSize), (int)m_cellSize - 1, (int)m_cellSize - 1, cellColor);
 				}
 				else
 				{
+					// Draw Path
 					for (int i = 0; i < node->connections.size(); i++)
 					{
 						Node *other = node->connections[i].target;
@@ -134,6 +133,7 @@ namespace AIForGames
 		float distance = glm::distance(end->position, start->position);
 		delta = delta * (m_cellSize/distance);
 
+		// Increment along path until blocked, return false if it's blocked, return true if it's not.
 		for (float cells = 1.0f; cells < distance/m_cellSize; cells += 1.0f)
 		{
 			glm::vec2 testPos = start->position + (delta * cells);
@@ -154,6 +154,7 @@ namespace AIForGames
 		Node *start = path[0];
 		smoothed.push_back(start);
 
+		// Remove unnecessary nodes from path.
 		for (int i = 0; i < path.size(); ++i)
 		{
 			while (i < path.size() - 1 && IsVisibleFrom(start, path[i + 1]))
@@ -166,31 +167,38 @@ namespace AIForGames
 	}
 
 	std::vector<Node*> NodeMap::AStarSearch(Node *startNode, Node *endNode, std::function<float(Node*, Node*)> heuristicFunc)
-	{
-		if (startNode == nullptr || endNode == nullptr)
+	{ 
+		// A* Implementation
+
+		if (startNode == nullptr || endNode == nullptr) // Needs a start and an end.
 		{
 			std::cout << "Error in Dijkstras Search. One or both parameters are nullptr!" << std::endl;
-			return std::vector<Node*>();
+			return std::vector<Node*>(); // Return empty path.
 		}
 
-		if (startNode == endNode)
+		if (startNode == endNode) // If start is also the end then there is no path.
 			return std::vector<Node*>();
 
+		// Init
 		startNode->gScore = 0;
 		startNode->previous = nullptr;
 
-		std::vector<Node *> openList;
-		std::vector<Node *> closedList;
+		std::vector<Node *> openList; // Visiting list
+		std::vector<Node *> closedList; // Visited list
 
 		openList.push_back(startNode);
 
 		while (!openList.empty())
 		{
+			// Resort list by final score to guarantee the shortest path.
 			std::sort(openList.begin(), openList.end(), [](Node *a, Node *b) { return (a->fScore < b->fScore); });
 
 			Node *currentNode = openList.front();
+
+			// Exit loop early if end node is found.
 			if (currentNode == endNode)
 				break;
+
 			openList.erase(openList.begin());
 			closedList.push_back(currentNode);
 
@@ -203,6 +211,8 @@ namespace AIForGames
 				float hScore = heuristicFunc(c.target, endNode);
 				float fScore = gScore + hScore;
 
+				// Calculate the score and update parent if node hasn't been visited yet.
+				// Add it to the open list to be compared.
 				if (std::find(openList.begin(), openList.end(), c.target) == openList.end())
 				{
 					c.target->gScore = gScore;
@@ -220,7 +230,7 @@ namespace AIForGames
 					}
 					openList.insert(insert, c.target);
 				}
-				else if (fScore < c.target->fScore)
+				else if (fScore < c.target->fScore) // Node is already in the open list with a valid score, compare scores to find the shorter path.
 				{
 					c.target->gScore = gScore;
 					c.target->hScore = hScore;
@@ -230,6 +240,7 @@ namespace AIForGames
 			}
 		}
 
+		// Create path.
 		std::vector<Node *> path;
 		Node *currentNode = endNode;
 
@@ -244,6 +255,8 @@ namespace AIForGames
 
 	float NodeMap::Heuristic(Node *startNode, Node *endNode)
 	{
+		// Default heuristic function.
+		// Manhattan Distance
 		float xDiff = abs(startNode->position.x - endNode->position.x);
 		float yDiff = abs(startNode->position.y - endNode->position.y);
 		return (xDiff + yDiff);

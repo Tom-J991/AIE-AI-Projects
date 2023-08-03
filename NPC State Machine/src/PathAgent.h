@@ -37,7 +37,7 @@ namespace AIForGames
 		NodeMap *m_nodeMap;
 
 		glm::vec2 m_position;
-		float m_speed = 256;
+		float m_speed = 88;
 
 	};
 
