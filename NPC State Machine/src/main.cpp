@@ -29,26 +29,31 @@ void DrawCharacter(Texture fontTexture, Vector2 position, const char character, 
 int main()
 {
     // Setup
-    const int resolution = 1; // 0 = 224x288, 1 = 448x864, etc
-    const int screenWidth = 224;
-    const int screenHeight = 288;
+    const int gameWidth = 224;
+    const int gameHeight = 288;
 
-    const int renderWidth = screenWidth * (resolution+1);
-    const int renderHeight = screenHeight * (resolution+1);
+    const int renderWidth = 1280;
+    const int renderHeight = 720;
+
+    float margins = 48 * ((float)renderHeight / 720);
+    float resolution = ((float)renderHeight - ((float)margins*2)) / (float)gameHeight;
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
 
     InitWindow(renderWidth, renderHeight, "Pac-Man");
     SetTargetFPS(60);
 
-    RenderTexture2D framebuffer = LoadRenderTexture(screenWidth, screenHeight);
+    RenderTexture2D framebuffer = LoadRenderTexture(gameWidth, gameHeight);
 
     Shader postProcessingShader = LoadShader(0, TextFormat("./res/shaders/postprocess.fs", 330));
 
-    int renderWidthLoc = GetShaderLocation(postProcessingShader, "renderWidth");
-    int renderHeightLoc = GetShaderLocation(postProcessingShader, "renderHeight");
-    SetShaderValue(postProcessingShader, renderWidthLoc, &renderWidth, SHADER_UNIFORM_INT);
-    SetShaderValue(postProcessingShader, renderHeightLoc, &renderHeight, SHADER_UNIFORM_INT);
+    float gw = (float)gameWidth;
+    float gh = (float)gameHeight;
+    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "renderWidth"), &renderWidth, SHADER_UNIFORM_INT);
+    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "renderHeight"), &renderHeight, SHADER_UNIFORM_INT);
+    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "gameWidth"), &gw, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "gameHeight"), &gh, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "resolution"), &resolution, SHADER_UNIFORM_FLOAT);
 
     // Init
     NodeMap nodeMap;
@@ -227,7 +232,14 @@ int main()
     int playerScore = 00;
 
     Texture fontTex = LoadTexture("./res/sprites/font/font-formatted.png");
+
+    Texture rgbTex = LoadTexture("./res/sprites/postprocess/rgb.png");
+    Texture bezelTex = LoadTexture("./res/sprites/bezel/pacman_bezel.png");
+    GenTextureMipmaps(&bezelTex);
+    SetTextureFilter(bezelTex, TEXTURE_FILTER_TRILINEAR);
+
     Texture stageTex = LoadTexture("./res/sprites/stage/stage.png"); // TODO: Draw stage from parts rather than from a full image.
+
     Texture pacmanTex = LoadTexture("./res/sprites/pacman.png");
     Texture blinkyTex = LoadTexture("./res/sprites/blinky.png");
     Texture pinkyTex = LoadTexture("./res/sprites/pinky.png");
@@ -260,17 +272,11 @@ int main()
             // Draw Debug
             nodeMap.Draw();
 
-            DrawPath(player.GetPath(), { 255, 255, 0, 255 });
             DrawPath(blinky.GetPath(), { 255, 0, 0, 255 });
             DrawPath(pinky.GetPath(), { 255, 0, 255, 255 });
             DrawPath(inky.GetPath(), { 0, 255, 255, 255 });
             DrawPath(clyde.GetPath(), { 255, 128, 64, 255 });
-
-            //player.Draw();
-            //blinky.Draw();
-            //pinky.Draw();
-            //inky.Draw();
-            //clyde.Draw();
+            DrawPath(player.GetPath(), { 255, 255, 0, 255 });
 
             // Draw Game
             DrawTexturePro(pacmanTex, 
@@ -312,23 +318,36 @@ int main()
         }
         EndTextureMode();
 
-        // Draw Framebuffer
+        // Draw to Screen
         BeginDrawing();
         ClearBackground(BLACK);
         {
+            // Draw Framebuffer
             BeginShaderMode(postProcessingShader);
+            SetShaderValueTexture(postProcessingShader, GetShaderLocation(postProcessingShader, "texture1"), rgbTex);
+            const float width = (float)gameWidth * resolution;
+            const float height = (float)gameHeight * resolution;
             DrawTexturePro(framebuffer.texture, 
                 { 0, 0, (float)framebuffer.texture.width, -(float)framebuffer.texture.height },
-                { 0, 0, renderWidth, renderHeight }, 
+                { ((float)renderWidth - width)/2, ((float)renderHeight - height)/2, width, height },
                 { 0, 0 },
                 0, WHITE);
             EndShaderMode();
+
+            // Draw Bezel
+            DrawTexturePro(bezelTex,
+                { 0, 0, (float)bezelTex.width, (float)bezelTex.height },
+                { 0, 0, renderWidth, renderHeight },
+                { 0, 0 },
+                0, WHITE);
         }
         EndDrawing();
     }
 
     // Cleanup and close
     UnloadTexture(fontTex);
+    UnloadTexture(bezelTex);
+    UnloadTexture(rgbTex);
     UnloadTexture(stageTex);
     UnloadTexture(pacmanTex);
     UnloadTexture(blinkyTex);
