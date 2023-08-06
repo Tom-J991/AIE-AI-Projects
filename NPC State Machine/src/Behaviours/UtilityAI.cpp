@@ -1,6 +1,6 @@
 #include "UtilityAI.h"
 
-#include "Agent.h"
+#include "Pathfinding/Agent.h"
 
 namespace AIForGames
 {

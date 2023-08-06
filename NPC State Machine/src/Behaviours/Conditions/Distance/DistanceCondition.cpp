@@ -1,6 +1,6 @@
 #include "DistanceCondition.h"
 
-#include "Agent.h"
+#include "Pathfinding/Agent.h"
 
 #include <glm/glm.hpp>
 

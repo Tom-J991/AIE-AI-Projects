@@ -8,11 +8,9 @@
 
 #include "PathAgent.h"
 
-#include <glm/glm.hpp>
-
 namespace AIForGames
 {
-	class Node;
+	struct Node;
 	class NodeMap;
 	class Behaviour;
 
@@ -52,10 +50,10 @@ namespace AIForGames
 		Node *GetCurrentNode() const { return m_pathAgent.GetCurrentNode(); }
 
 	private:
-		Agent *m_target;
+		Agent *m_target = nullptr;
 		PathAgent m_pathAgent;
-		Behaviour *m_current;
-		NodeMap *m_nodeMap;
+		Behaviour *m_current = nullptr;
+		NodeMap *m_nodeMap = nullptr;
 		Color m_color;
 		float m_size = 16;
 

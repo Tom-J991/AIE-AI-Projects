@@ -1,7 +1,7 @@
 #include "SelectorBehaviour.h"
 
-#include "NodeMap.h"
-#include "Agent.h"
+#include "Pathfinding/NodeMap.h"
+#include "Pathfinding/Agent.h"
 
 #include <glm/glm.hpp>
 

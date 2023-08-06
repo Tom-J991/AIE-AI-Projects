@@ -1,6 +1,6 @@
 #include "State.h"
 
-#include "Agent.h"
+#include "Pathfinding/Agent.h"
 
 namespace AIForGames
 {

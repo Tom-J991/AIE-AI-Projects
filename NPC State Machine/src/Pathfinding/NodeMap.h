@@ -25,8 +25,8 @@ namespace AIForGames
 		Node *GetClosestNode(glm::vec2 worldPos) const;
 		Node *GetRandomNode() const;
 
-		void SetCellSize(float cellSize) { m_cellSize = cellSize; }
-		float GetCellSize() const { return m_cellSize; }
+		void SetCellSize(int cellSize) { m_cellSize = cellSize; }
+		int GetCellSize() const { return m_cellSize; }
 
 		int GetWidth() const { return m_width * m_cellSize; }
 		int GetHeight() const { return m_height  * m_cellSize; }
@@ -35,7 +35,7 @@ namespace AIForGames
 		static float Heuristic(Node *startNode, Node *endNode);
 
 	private:
-		float m_cellSize = 64;
+		int m_cellSize = 64;
 		int m_width, m_height;
 
 		Node **m_nodes;

@@ -1,6 +1,6 @@
 #include "FiniteStateMachine.h"
 
-#include "Agent.h"
+#include "Pathfinding/Agent.h"
 #include "State.h"
 
 #include "Conditions/Condition.h"

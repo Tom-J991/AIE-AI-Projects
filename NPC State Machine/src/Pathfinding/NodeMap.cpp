@@ -15,8 +15,8 @@ namespace AIForGames
 		const char emptySquare = '0';
 		const char normalSquare = '1';
 
-		m_height = asciiMap.size();
-		m_width = asciiMap[0].size();
+		m_height = (int)asciiMap.size();
+		m_width = (int)asciiMap[0].size();
 
 		m_nodes = new Node*[m_width * m_height];
 

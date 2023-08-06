@@ -1,8 +1,8 @@
 #include "PlayerMovementBehaviour.h"
 
-#include "Pathfinding.h"
-#include "Agent.h"
-#include "NodeMap.h"
+#include "Pathfinding/Pathfinding.h"
+#include "Pathfinding/Agent.h"
+#include "Pathfinding/NodeMap.h"
 
 #include <raylib.h>
 
@@ -17,19 +17,19 @@ namespace AIForGames
     void PlayerMovementBehaviour::Update(Agent *agent, float deltaTime)
 	{
         // Handle Input
-        if (IsKeyPressed(KEY_LEFT))
+        if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A))
         {
             m_inputDir = MOVE_DIRECTIONS::LEFT;
         }
-        if (IsKeyPressed(KEY_RIGHT))
+        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D))
         {
             m_inputDir = MOVE_DIRECTIONS::RIGHT;
         }
-        if (IsKeyPressed(KEY_DOWN))
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
         {
             m_inputDir = MOVE_DIRECTIONS::DOWN;
         }
-        if (IsKeyPressed(KEY_UP))
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
         {
             m_inputDir = MOVE_DIRECTIONS::UP;
         }

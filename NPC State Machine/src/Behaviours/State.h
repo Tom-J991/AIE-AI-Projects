@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Behaviours/Behaviour.h"
+#include "Behaviours/Conditions/Condition.h"
 
 #include <vector>
 

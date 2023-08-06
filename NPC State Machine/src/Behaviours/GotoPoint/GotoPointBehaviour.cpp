@@ -1,7 +1,7 @@
 #include "GotoPointBehaviour.h"
 
-#include "Pathfinding.h"
-#include "Agent.h"
+#include "Pathfinding/Pathfinding.h"
+#include "Pathfinding/Agent.h"
 
 #include <raylib.h>
 

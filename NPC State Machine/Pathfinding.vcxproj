@@ -19,7 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Agent.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObjects\Blinky.cpp" />
+    <ClCompile Include="src\GameObjects\Clyde.cpp" />
+    <ClCompile Include="src\GameObjects\Ghost.cpp" />
+    <ClCompile Include="src\GameObjects\Inky.cpp" />
+    <ClCompile Include="src\GameObjects\Pinky.cpp" />
+    <ClCompile Include="src\GameObjects\Player.cpp" />
+    <ClCompile Include="src\Pathfinding\Agent.cpp" />
     <ClCompile Include="src\Behaviours\Follow\FollowBehaviour.cpp" />
     <ClCompile Include="src\Behaviours\GotoPoint\GotoPointBehaviour.cpp" />
     <ClCompile Include="src\Behaviours\PlayerMovement\PlayerMovementBehaviour.cpp" />
@@ -28,14 +35,24 @@
     <ClCompile Include="src\Behaviours\Wander\WanderBehaviour.cpp" />
     <ClCompile Include="src\Behaviours\Conditions\Distance\DistanceCondition.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\NodeMap.cpp" />
-    <ClCompile Include="src\PathAgent.cpp" />
-    <ClCompile Include="src\Pathfinding.cpp" />
+    <ClCompile Include="src\Pathfinding\NodeMap.cpp" />
+    <ClCompile Include="src\Pathfinding\PathAgent.cpp" />
+    <ClCompile Include="src\Pathfinding\Pathfinding.cpp" />
     <ClCompile Include="src\Behaviours\FiniteStateMachine.cpp" />
     <ClCompile Include="src\Behaviours\State.cpp" />
+    <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\Utility\RenderText.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Agent.h" />
+    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\GameObjects\Blinky.h" />
+    <ClInclude Include="src\GameObjects\Clyde.h" />
+    <ClInclude Include="src\GameObjects\Ghost.h" />
+    <ClInclude Include="src\GameObjects\Inky.h" />
+    <ClInclude Include="src\GameObjects\Pinky.h" />
+    <ClInclude Include="src\GameObjects\Player.h" />
+    <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\Pathfinding\Agent.h" />
     <ClInclude Include="src\Behaviours\Behaviour.h" />
     <ClInclude Include="src\Behaviours\Follow\FollowBehaviour.h" />
     <ClInclude Include="src\Behaviours\GotoPoint\GotoPointBehaviour.h" />
@@ -44,12 +61,14 @@
     <ClInclude Include="src\Behaviours\UtilityAI.h" />
     <ClInclude Include="src\Behaviours\Wander\WanderBehaviour.h" />
     <ClInclude Include="src\Behaviours\Conditions\Distance\DistanceCondition.h" />
-    <ClInclude Include="src\NodeMap.h" />
-    <ClInclude Include="src\PathAgent.h" />
-    <ClInclude Include="src\Pathfinding.h" />
+    <ClInclude Include="src\Pathfinding\NodeMap.h" />
+    <ClInclude Include="src\Pathfinding\PathAgent.h" />
+    <ClInclude Include="src\Pathfinding\Pathfinding.h" />
     <ClInclude Include="src\Behaviours\Conditions\Condition.h" />
     <ClInclude Include="src\Behaviours\FiniteStateMachine.h" />
     <ClInclude Include="src\Behaviours\State.h" />
+    <ClInclude Include="src\ResourceManager.h" />
+    <ClInclude Include="src\Utility\RenderText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -1,7 +1,7 @@
 #include "FollowBehaviour.h"
 
-#include "NodeMap.h"
-#include "Agent.h"
+#include "Pathfinding/NodeMap.h"
+#include "Pathfinding/Agent.h"
 
 namespace AIForGames
 {

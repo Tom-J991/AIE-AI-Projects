@@ -20,8 +20,11 @@ namespace AIForGames
 
 	Agent::~Agent()
 	{
-		m_current->Exit(this);
-		delete m_current;
+		if (m_current)
+		{
+			m_current->Exit(this);
+			delete m_current;
+		}
 	}
 
 	void Agent::Update(float deltaTime)

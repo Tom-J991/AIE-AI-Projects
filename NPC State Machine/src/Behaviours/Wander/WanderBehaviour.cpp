@@ -1,8 +1,8 @@
 #include "WanderBehaviour.h"
 
-#include "Pathfinding.h"
-#include "NodeMap.h"
-#include "Agent.h"
+#include "Pathfinding/Pathfinding.h"
+#include "Pathfinding/NodeMap.h"
+#include "Pathfinding/Agent.h"
 
 namespace AIForGames
 {
