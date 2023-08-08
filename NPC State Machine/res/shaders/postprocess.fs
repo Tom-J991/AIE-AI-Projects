@@ -22,7 +22,9 @@ uniform float time;
 //
 float curveStr = 1.2;
 float vignetteStr = 1.0;
-float rgbEmission = 5;
+float rgbEmission = 4.0;
+float rgbResolution = 1.0;
+float rgbBlend = 0.4;
 
 //
 vec2 CurveUV(vec2 uv, float str)
@@ -45,12 +47,11 @@ void main()
     
     // RGB Pattern
     float aspectRatio = gameWidth / gameHeight;
-    float res = 2.0 / resolution;
     uv = CurveUV(baseUV, curveStr);
-    uv.x *= gameWidth * res;
-    uv.y *= gameHeight * res;
+    uv.x *= gameWidth * rgbResolution;
+    uv.y *= gameHeight * rgbResolution;
     uv.y *= aspectRatio;
-    color = color * texture(texture1, uv).rgb * rgbEmission;
+    color = mix(color, color * texture(texture1, uv).rgb * rgbEmission, rgbBlend);
 
     // Vignette
     uv = CurveUV(baseUV, vignetteStr);

@@ -10,7 +10,7 @@ Ghost::Ghost(NodeMap *nodeMap, Node *startNode)
     m_agent->SetNode(startNode);
     m_agent->SetColor(RED);
     m_agent->SetSize(8);
-    m_agent->SetSpeed(88 * 0.75f);
+    m_agent->SetSpeed(80 * 0.75f);
 }
 Ghost::~Ghost()
 { 

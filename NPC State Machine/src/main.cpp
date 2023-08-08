@@ -9,8 +9,8 @@ int main()
     const int gameWidth = 224; // Game resolution
     const int gameHeight = 288;
 
-    const int renderWidth = 1280; // Window resolution
-    const int renderHeight = 720;
+    const int renderWidth = 1920; // Window resolution
+    const int renderHeight = 1080;
 
     float margins = 48 * ((float)renderHeight / 720); // Variables to help resize game to fit into window + bezel overlay.
     float resolution = ((float)renderHeight - ((float)margins*2)) / (float)gameHeight; 
