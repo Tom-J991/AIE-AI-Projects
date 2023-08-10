@@ -9,7 +9,6 @@ Inky::Inky(NodeMap *nodeMap, Node *startNode)
 }
 Inky::~Inky()
 { 
-	Ghost::~Ghost();
 }
 
 void Inky::Update(float deltaTime)

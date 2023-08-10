@@ -9,7 +9,6 @@ Blinky::Blinky(NodeMap *nodeMap, Node *startNode)
 }
 Blinky::~Blinky()
 { 
-	Ghost::~Ghost();
 }
 
 void Blinky::Update(float deltaTime)

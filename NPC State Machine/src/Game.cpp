@@ -131,6 +131,7 @@ void Game::Draw()
     // Draw Game
     if (m_introOne)
     {
+        // TODO: Sprite Animation.
         m_player->Draw(m_resourceManager->GetTexture("TEX_PACMAN"));
 
         m_clyde->Draw(m_resourceManager->GetTexture("TEX_CLYDE"));

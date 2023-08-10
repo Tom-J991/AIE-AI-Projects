@@ -9,7 +9,6 @@ Pinky::Pinky(NodeMap *nodeMap, Node *startNode)
 }
 Pinky::~Pinky()
 { 
-	Ghost::~Ghost();
 }
 
 void Pinky::Update(float deltaTime)

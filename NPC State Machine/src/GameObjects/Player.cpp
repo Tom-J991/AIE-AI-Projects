@@ -26,7 +26,7 @@ void Player::Update(float deltaTime)
 
 void Player::Draw(Texture &texture)
 {
-    DrawPath(m_agent->GetPath(), YELLOW);
+    DrawPath(m_agent->GetPath(), YELLOW); // Debug
 
     DrawTexturePro(texture,
         { 1 * 16, 0 * 16, 16, 16 },

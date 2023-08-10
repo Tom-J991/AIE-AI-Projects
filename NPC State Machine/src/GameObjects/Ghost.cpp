@@ -2,11 +2,13 @@
 
 #include <raylib.h>
 
-#include "Behaviours/Wander/WanderBehaviour.h"
+#include "Behaviours/State.h"
 
 Ghost::Ghost(NodeMap *nodeMap, Node *startNode)
 {
-    m_agent = new Agent(nodeMap, new WanderBehaviour());
+    m_stateMachine = new FiniteStateMachine(new State());
+
+    m_agent = new Agent(nodeMap, m_stateMachine);
     m_agent->SetNode(startNode);
     m_agent->SetColor(RED);
     m_agent->SetSize(8);
@@ -14,5 +16,8 @@ Ghost::Ghost(NodeMap *nodeMap, Node *startNode)
 }
 Ghost::~Ghost()
 { 
-    //delete m_agent; // TODO: Fix read access error
+    //delete m_agent; // TODO: Fix read access errors
+    //delete m_stateMachine;
+    //m_agent = nullptr;
+    //m_stateMachine = nullptr;
 }

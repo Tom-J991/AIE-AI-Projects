@@ -4,6 +4,8 @@
 #include "Pathfinding/NodeMap.h"
 #include "Pathfinding/Agent.h"
 
+#include "Behaviours/FiniteStateMachine.h"
+
 using namespace AIForGames;
 
 struct Texture;
@@ -19,6 +21,7 @@ public:
 
 protected:
 	Agent *m_agent;
+	FiniteStateMachine *m_stateMachine;
 
 private:
 

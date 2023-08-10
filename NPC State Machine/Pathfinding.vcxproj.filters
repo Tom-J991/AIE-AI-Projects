@@ -48,9 +48,6 @@
     <ClCompile Include="src\Behaviours\Conditions\Distance\DistanceCondition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Behaviours\UtilityAI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Behaviours\Selector\SelectorBehaviour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -120,9 +117,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Behaviours\Conditions\Distance\DistanceCondition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Behaviours\UtilityAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Behaviours\Selector\SelectorBehaviour.h">

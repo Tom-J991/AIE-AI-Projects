@@ -9,7 +9,6 @@ Clyde::Clyde(NodeMap *nodeMap, Node *startNode)
 }
 Clyde::~Clyde()
 { 
-	Ghost::~Ghost();
 }
 
 void Clyde::Update(float deltaTime)
