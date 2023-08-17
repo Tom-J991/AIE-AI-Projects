@@ -12,11 +12,6 @@ out vec4 finalColor;
 uniform float gameWidth;
 uniform float gameHeight;
 
-uniform int renderWidth;
-uniform int renderHeight;
-
-uniform float resolution;
-
 uniform float time;
 
 //
@@ -62,8 +57,8 @@ void main()
     color *= vignette * 1.1;
 
     // Scanlines
-    float scanline 	= clamp(0.95 + 0.12 * cos(3.14 * (uv.y + 0.008 * time) * 240.0 * 1.0), 0.0, 1.0);
-    float grille 	= 0.85 + 0.15 * clamp(1.5 * cos(3.14 * uv.x * 640.0 * 1.0), 0.0, 1.0);    
+    float scanline 	= clamp(0.95 + 0.12 * cos(3.14 * (uv.x + 0.008 * time) * 240.0 * 1.0), 0.0, 1.0);
+    float grille 	= 0.85 + 0.15 * clamp(1.5 * cos(3.14 * uv.y * 640.0 * 1.0), 0.0, 1.0);    
     color *= scanline * grille * 1.0;
     
     // Output

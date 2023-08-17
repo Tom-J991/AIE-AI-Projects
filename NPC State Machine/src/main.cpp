@@ -1,16 +1,19 @@
 // PAC-MAN™ & ©Bandai Namco Entertainment Inc. 
 // 
+// References:
 // https://www.gamedeveloper.com/design/the-pac-man-dossier
 // https://gameinternals.com/understanding-pac-man-ghost-behavior
 // https://pacman.fandom.com/wiki/Maze_Ghost_AI_Behaviors
-
+// 
+// (W.I.P.) Not a completed Pac-Man remake.
+//
 
 #include <raylib.h>
 
 #include "Globals.h"
 #include "Game.h"
 
-int main()
+int main() // Entry Point
 {
     // Setup Window
     const int gameWidth = 224; // Game resolution
@@ -19,7 +22,7 @@ int main()
     const int renderWidth = 1280; // Window resolution
     const int renderHeight = 720;
 
-    float margins = 48 * ((float)renderHeight / 720); // Variables to help resize game to fit into window + bezel overlay.
+    float margins = 48 * ((float)renderHeight / 720); // Variables to help resize Framebuffer quad to fit into window + bezel overlay.
     float resolution = ((float)renderHeight - ((float)margins*2)) / (float)gameHeight; 
 
     SetConfigFlags(FLAG_MSAA_4X_HINT); // Enable Anti-aliasing if available.
@@ -29,22 +32,20 @@ int main()
 
     InitAudioDevice();
 
-    RenderTexture2D framebuffer = LoadRenderTexture(gameWidth, gameHeight); // Create and setup Framebuffer to draw game onto.
+    RenderTexture2D framebuffer = LoadRenderTexture(gameWidth, gameHeight); // Create and setup Framebuffer for post-processing.
     GenTextureMipmaps(&framebuffer.texture);
     SetTextureFilter(framebuffer.texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(framebuffer.texture, TEXTURE_WRAP_CLAMP);
 
     Shader postProcessingShader = LoadShader(0, TextFormat("./res/shaders/postprocess.fs", 330));
 
+    // Setup Post-Processing Shader Variables
     float gw = (float)gameWidth; // Temp variables for type conversion since SetShaderValue() won't allow it with the parameter.
     float gh = (float)gameHeight;
-    // Setup Post-Processing Shader Variables
-    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "renderWidth"), &renderWidth, SHADER_UNIFORM_INT);
-    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "renderHeight"), &renderHeight, SHADER_UNIFORM_INT);
     SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "gameWidth"), &gw, SHADER_UNIFORM_FLOAT);
     SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "gameHeight"), &gh, SHADER_UNIFORM_FLOAT);
-    SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "resolution"), &resolution, SHADER_UNIFORM_FLOAT);
 
+    // Load textures for Post-Processing & overlays.
     Texture rgbTex = LoadTexture("./res/sprites/postprocess/rgb.png");
     GenTextureMipmaps(&rgbTex);
     SetTextureFilter(rgbTex, TEXTURE_FILTER_POINT);
@@ -55,6 +56,7 @@ int main()
     SetTextureFilter(bezelTex, TEXTURE_FILTER_TRILINEAR);
     SetTextureWrap(bezelTex, TEXTURE_WRAP_REPEAT);
 
+    // Setup Globals
     Globals::g_fontTex = LoadTexture("./res/sprites/font/font-formatted.png");
 
 
@@ -72,13 +74,17 @@ int main()
         deltaTime = fTime - time;
         time = fTime;
 
-        SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "time"), &fTime, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(postProcessingShader, GetShaderLocation(postProcessingShader, "time"), &fTime, SHADER_UNIFORM_FLOAT); // Send time to post-processing shader.
 
+        // Update Game
         game->Update(deltaTime);
 
+        // Draw to Framebuffer
         BeginTextureMode(framebuffer);
         ClearBackground(BLACK);
+        {
             game->Draw(); // Draw Game to Framebuffer
+        }
         EndTextureMode();
 
         // Draw to screen
@@ -87,8 +93,8 @@ int main()
         {
             // Draw Framebuffer
             BeginShaderMode(postProcessingShader);
-            SetShaderValueTexture(postProcessingShader, GetShaderLocation(postProcessingShader, "texture1"), rgbTex);
-            const float width = (float)gameWidth * resolution;
+            SetShaderValueTexture(postProcessingShader, GetShaderLocation(postProcessingShader, "texture1"), rgbTex); // Send RGB pattern texture to shader.
+            const float width = (float)gameWidth * resolution; // Temp variables to resize quad.
             const float height = (float)gameHeight * resolution;
             DrawTexturePro(framebuffer.texture, 
                 { 0, 0, (float)framebuffer.texture.width, -(float)framebuffer.texture.height },
