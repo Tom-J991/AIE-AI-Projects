@@ -7,12 +7,22 @@
 
 #include "Pathfinding/Pathfinding.h"
 #include "Pathfinding/NodeMap.h"
+#include "Pathfinding/Agent.h"
 
-#include "Utility/RenderText.h"
+#include "Behaviours/State.h"
+#include "Behaviours/FiniteStateMachine.h"
 
-#include "Globals.h"
+#include "Behaviours/Wander/WanderBehaviour.h"
+#include "Behaviours/Follow/FollowBehaviour.h"
+
+#include "Behaviours/Conditions/Condition.h"
+#include "Behaviours/Conditions/Distance/DistanceCondition.h"
+#include "Behaviours/Conditions/Timer/TimerCondition.h"
 
 using namespace AIForGames;
+
+Agent *agent = nullptr;
+Agent *agent2 = nullptr;
 
 Game::Game()
 { 
@@ -22,75 +32,87 @@ Game::Game()
 }
 Game::~Game()
 { 
+    delete agent;
+    delete agent2;
+
     delete m_nodeMap;
     delete m_resourceManager;
 }
 
 void Game::Init()
 {
-    // TODO: Implement Stage Builder using "stage_parts" sprite sheet, 
-    // in the original arcade game every level was the same stage but I eventually want stages to be easily created and customizable.
     std::vector<std::string> asciiMap;
-    asciiMap.push_back("0000000000000000000000000000");
-    asciiMap.push_back("0000000000000000000000000000");
-    asciiMap.push_back("0000000000000000000000000000");
-    asciiMap.push_back("0000000000000000000000000000");
-    asciiMap.push_back("0111111111111001111111111110");
-    asciiMap.push_back("0100001000001001000001000010");
-    asciiMap.push_back("0100001000001001000001000010");
-    asciiMap.push_back("0100001000001001000001000010");
-    asciiMap.push_back("0111111111111111111111111110");
-    asciiMap.push_back("0100001001000000001001000010");
-    asciiMap.push_back("0100001001000000001001000010");
-    asciiMap.push_back("0111111001111001111001111110");
-    asciiMap.push_back("0000001000001001000001000000");
-    asciiMap.push_back("0000001000001001000001000000");
-    asciiMap.push_back("0000001001111111111001000000");
-    asciiMap.push_back("0000001001000000001001000000");
-    asciiMap.push_back("0000001001000000001001000000");
-    asciiMap.push_back("1111111111000000001111111111");
-    asciiMap.push_back("0000001001000000001001000000");
-    asciiMap.push_back("0000001001000000001001000000");
-    asciiMap.push_back("0000001001111111111001000000");
-    asciiMap.push_back("0000001001000000001001000000");
-    asciiMap.push_back("0000001001000000001001000000");
-    asciiMap.push_back("0111111111111001111111111110");
-    asciiMap.push_back("0100001000001001000001000010");
-    asciiMap.push_back("0100001000001001000001000010");
-    asciiMap.push_back("0111001111111111111111001110");
-    asciiMap.push_back("0001001001000000001001001000");
-    asciiMap.push_back("0001001001000000001001001000");
-    asciiMap.push_back("0111111001111001111001111110");
-    asciiMap.push_back("0100000000001001000000000010");
-    asciiMap.push_back("0100000000001001000000000010");
-    asciiMap.push_back("0111111111111111111111111110");
-    asciiMap.push_back("0000000000000000000000000000");
-    asciiMap.push_back("0000000000000000000000000000");
-    asciiMap.push_back("0000000000000000000000000000");
+    asciiMap.push_back("0000000000000000000000000000000000000000");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0111111111111111111111111111111111111110");
+    asciiMap.push_back("0000000000000000000000000000000000000000");
 
-    m_nodeMap->SetCellSize(8); // Tiles are 8x8
+    m_nodeMap->SetCellSize(32);
     m_nodeMap->Initialize(asciiMap);
 
-    m_player = std::make_unique<Player>(m_nodeMap, m_nodeMap->GetNode(14, 26));
+    DistanceCondition* avatar1DistanceClose = new DistanceCondition(7.0f * m_nodeMap->GetCellSize(), true);
+    DistanceCondition* avatar1DistanceFar = new DistanceCondition(7.0f * m_nodeMap->GetCellSize(), false);
+    DistanceCondition* avatar2DistanceClose = new DistanceCondition(7.0f * m_nodeMap->GetCellSize(), true);
+    DistanceCondition* avatar2DistanceFar = new DistanceCondition(7.0f * m_nodeMap->GetCellSize(), false);
 
-    m_blinky = std::make_unique<Blinky>(m_nodeMap, m_nodeMap->GetRandomNode());
-    m_pinky = std::make_unique<Pinky>(m_nodeMap, m_nodeMap->GetRandomNode());
-    m_inky = std::make_unique<Inky>(m_nodeMap, m_nodeMap->GetRandomNode());
-    m_clyde = std::make_unique<Clyde>(m_nodeMap, m_nodeMap->GetRandomNode());
+    TimerCondition *avatar1Timer = new TimerCondition(4.0f);
+    TimerCondition *avatar2Timer = new TimerCondition(4.0f);
 
-    m_resourceManager->AddTexture("TEX_STAGE", "./res/sprites/stage/stage.png"); // TODO: Draw stage from parts rather than from a full image.
+    State *avatar1wanderState = new State(new WanderBehaviour());
+    State *avatar1followState = new State(new FollowBehaviour());
+    avatar1wanderState->AddTransition(avatar1Timer, avatar1followState);
+    avatar1wanderState->AddTransition(avatar1DistanceClose, avatar1followState);
+    avatar1followState->AddTransition(avatar1Timer, avatar1wanderState);
+    avatar1followState->AddTransition(avatar1DistanceFar, avatar1wanderState);
 
-    m_resourceManager->AddTexture("TEX_LIFECOUNTER", "./res/sprites/ui/lives.png");
-    m_resourceManager->AddTexture("TEX_ITEMCOUNTER", "./res/sprites/ui/items.png");
+    State *avatar2wanderState = new State(new WanderBehaviour());
+    State *avatar2followState = new State(new FollowBehaviour());
+    avatar2wanderState->AddTransition(avatar2Timer, avatar2followState);
+    avatar2wanderState->AddTransition(avatar2DistanceClose, avatar2followState);
+    avatar2followState->AddTransition(avatar2Timer, avatar2wanderState);
+    avatar2followState->AddTransition(avatar2DistanceFar, avatar2wanderState);
 
-    m_resourceManager->AddTexture("TEX_PACMAN", "./res/sprites/pacman.png");
-    m_resourceManager->AddTexture("TEX_BLINKY", "./res/sprites/blinky.png");
-    m_resourceManager->AddTexture("TEX_PINKY", "./res/sprites/pinky.png");
-    m_resourceManager->AddTexture("TEX_INKY", "./res/sprites/inky.png");
-    m_resourceManager->AddTexture("TEX_CLYDE", "./res/sprites/clyde.png");
+    FiniteStateMachine *avatar1FSM = new FiniteStateMachine(avatar1wanderState);
+    avatar1FSM->AddState(avatar1wanderState);
+    avatar1FSM->AddState(avatar1followState);
 
-    m_resourceManager->AddSound("SND_START", "./res/sfx/game_start.ogg");
-    PlaySound(m_resourceManager->GetSound("SND_START"));
+    FiniteStateMachine *avatar2FSM = new FiniteStateMachine(avatar2wanderState);
+    avatar2FSM->AddState(avatar2wanderState);
+    avatar2FSM->AddState(avatar2followState);
+
+    agent = new Agent(m_nodeMap, avatar1FSM);
+    agent2 = new Agent(m_nodeMap, avatar2FSM);
+
+    agent->SetNode(m_nodeMap->GetRandomNode());
+    agent->SetTarget(agent2);
+    agent->SetSpeed(256);
+    agent->SetSize(16);
+    agent->SetColor(GREEN);
+
+    agent2->SetNode(m_nodeMap->GetRandomNode());
+    agent2->SetTarget(agent);
+    agent2->SetSpeed(256);
+    agent2->SetSize(16);
+    agent2->SetColor(GREEN);
 }
 
 void Game::Cleanup()
@@ -98,124 +120,43 @@ void Game::Cleanup()
     m_resourceManager->Cleanup();
 }
 
-float flashTimer = 0;
-bool show_oneup = false;
 void Game::Update(float deltaTime)
 {
-    if (flashTimer >= deltaTime * 15)
-    {
-        show_oneup = !show_oneup;
-        flashTimer = 0;
-    }
-    flashTimer += deltaTime;
+    agent->Update(deltaTime);
+    agent2->Update(deltaTime);
+}
 
-    if (!m_gameStart)
-    {
-        IntroSequence(deltaTime);
-        return;
-    }
+void DrawAvatarHealth(Agent *agent, int &agentHealth)
+{
+    int offset = 64;
+    int w = 64;
+    int h = 12;
 
-    m_player->Update(deltaTime);
+    int x = agent->GetPosition().x - (w/2);
+    int y = agent->GetPosition().y - offset;
 
-    m_blinky->Update(deltaTime);
-    m_pinky->Update(deltaTime);
-    m_inky->Update(deltaTime);
-    m_clyde->Update(deltaTime);
+    DrawRectangle(x, y, w, h, RED); // Base
+
+    int wh = (int)(w * ((float)agentHealth / 4));
+
+    DrawRectangle(x, y, wh, h, GREEN); // Fill
 }
 
 void Game::Draw()
 {
     // Draw Debug
-    //m_nodeMap->Draw();
+    m_nodeMap->Draw();
 
     // Draw Game
-    if (m_introOne)
+    if (!m_avatar1Dead)
     {
-        // TODO: Sprite Animation.
-        m_player->Draw(m_resourceManager->GetTexture("TEX_PACMAN"));
-
-        m_clyde->Draw(m_resourceManager->GetTexture("TEX_CLYDE"));
-        m_inky->Draw(m_resourceManager->GetTexture("TEX_INKY"));
-        m_pinky->Draw(m_resourceManager->GetTexture("TEX_PINKY"));
-        m_blinky->Draw(m_resourceManager->GetTexture("TEX_BLINKY"));
+        agent->Draw();
+        DrawAvatarHealth(agent, m_avatar1Health);
     }
 
-    DrawTextureEx(m_resourceManager->GetTexture("TEX_STAGE"), {0, 24}, 0, 1, WHITE); // Draw stage.
-
-    // Draw UI
-    const Color uiWhite = { 224, 221, 255, 255 };
-    const Color uiBlue = { 0, 255, 255, 255 };
-    const Color uiYellow = { 255, 255, 0, 255 };
-
-    Utility::DrawString(Globals::g_fontTex, { 18, 0 }, "HIGH SCORE", uiWhite);
-
-    if (show_oneup)
-        Utility::DrawString(Globals::g_fontTex, { 5, 0 }, "1UP", uiWhite);
-
-    std::stringstream scoreStream;
-    scoreStream << std::setw(2) << std::setfill('0') << m_playerScore;
-    Utility::DrawString(Globals::g_fontTex, { 6, 1 }, scoreStream.str(), uiWhite);
-
-    scoreStream.clear(); // Clear out error bits
-    scoreStream.str(std::string()); // Empty stream
-
-    scoreStream << std::setw(2) << std::setfill('0') << m_highScore;
-    Utility::DrawString(Globals::g_fontTex, { 16, 1 }, scoreStream.str(), uiWhite);
-
-    if (m_playerLives > 0)
+    if (!m_avatar2Dead)
     {
-        Texture &livesCounterTex = m_resourceManager->GetTexture("TEX_LIFECOUNTER");
-        DrawTexturePro(livesCounterTex,
-            { 0, (5 - (float)m_playerLives) * 16, (float)livesCounterTex.width, (float)livesCounterTex.height / 5 },
-            { 2 * 8, 34 * 8, (float)livesCounterTex.width, (float)livesCounterTex.height / 5 },
-            { 0, 0 },
-            0, WHITE);
-    }
-
-    Texture &itemsCounterTex = m_resourceManager->GetTexture("TEX_ITEMCOUNTER");
-    DrawTexturePro(itemsCounterTex,
-        { 0, ((float)m_gameLevel) * 16, (float)itemsCounterTex.width, (float)itemsCounterTex.height / 19 },
-        { 26 * 8, 34 * 8, (float)itemsCounterTex.width, (float)itemsCounterTex.height / 19 },
-        { (float)itemsCounterTex.width, 0 },
-        0, WHITE);
-
-    // Draw Intro
-    if (!m_introOne)
-    {
-        Utility::DrawString(Globals::g_fontTex, { 18, 14 }, "PLAYER ONE", uiBlue);
-        Utility::DrawString(Globals::g_fontTex, { 16, 20 }, "READY!", uiYellow);
-    }
-    else if (m_introOne && !m_introTwo)
-    {
-        Utility::DrawString(Globals::g_fontTex, { 16, 20 }, "READY!", uiYellow);
-    }
-    else if (m_introOne && m_introTwo)
-    {
-
-    }
-}
-
-float introClock = 0;
-void Game::IntroSequence(float deltaTime)
-{
-    // Timings
-    if (introClock >= deltaTime * (3 * 60))
-        m_introOne = true;
-    if (introClock >= deltaTime * (4 * 60))
-        m_introTwo = true;
-    introClock += deltaTime;
-
-    // Update
-    if (!m_introOne)
-    {
-        m_playerLives = 5;
-    }
-    else if (m_introOne && !m_introTwo)
-    {
-        m_playerLives = 4;
-    }
-    else if (m_introOne && m_introTwo)
-    {
-        m_gameStart = true;
+        agent2->Draw();
+        DrawAvatarHealth(agent2, m_avatar2Health);
     }
 }

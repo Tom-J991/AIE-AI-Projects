@@ -24,7 +24,7 @@ namespace AIForGames
 
 		for (State::Transition t : m_currentState->GetTransitions())
 		{
-			if (t.condition->IsTrue(agent))
+			if (t.condition->IsTrue(agent, deltaTime))
 				newState = t.targetState;
 		}
 

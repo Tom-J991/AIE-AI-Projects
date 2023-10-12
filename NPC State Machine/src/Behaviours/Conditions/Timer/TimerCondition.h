@@ -4,16 +4,16 @@
 
 namespace AIForGames
 {
-	class DistanceCondition : public Condition
+	class TimerCondition : public Condition
 	{
 	public:
-		DistanceCondition(float d, bool lt) : m_distance(d), m_lessThan(lt) { }
+		TimerCondition(float t) : m_time(t) { }
 
 		virtual bool IsTrue(Agent *agent, float deltaTime) override;
 
 	private:
-		float m_distance;
-		bool m_lessThan;
+		float m_clock = 0.0f;
+		float m_time;
 
 	};
 

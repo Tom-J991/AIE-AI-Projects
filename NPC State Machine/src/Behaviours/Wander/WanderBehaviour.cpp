@@ -8,6 +8,7 @@ namespace AIForGames
 {
 	void WanderBehaviour::Enter(Agent *agent)
 	{
+		agent->SetColor(GREEN);
 		agent->Reset();
 	}
 

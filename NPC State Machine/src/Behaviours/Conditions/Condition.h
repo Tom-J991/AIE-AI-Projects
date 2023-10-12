@@ -7,7 +7,7 @@ namespace AIForGames
 	class Condition
 	{
 	public:
-		virtual bool IsTrue(Agent *agent) = 0;
+		virtual bool IsTrue(Agent *agent, float deltaTime) = 0;
 
 	};
 

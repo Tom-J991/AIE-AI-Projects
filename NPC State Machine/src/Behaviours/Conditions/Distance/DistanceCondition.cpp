@@ -6,7 +6,7 @@
 
 namespace AIForGames
 {
-	bool DistanceCondition::IsTrue(Agent *agent)
+	bool DistanceCondition::IsTrue(Agent *agent, float deltaTime)
 	{
 		return (glm::distance(agent->GetPosition(), agent->GetTarget()->GetPosition()) < m_distance) == m_lessThan;
 	}

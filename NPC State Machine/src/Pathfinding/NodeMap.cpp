@@ -58,8 +58,8 @@ namespace AIForGames
 						nodeSouth->ConnectTo(node, 1.f);
 					}
 
-					// Diagonals (Unused)
-					/*Node *nodeSouthWest = (x == 0 || y == 0) ? nullptr : GetNode(x-1, y-1);
+					// Diagonals
+					Node *nodeSouthWest = (x == 0 || y == 0) ? nullptr : GetNode(x-1, y-1);
 					if (nodeSouthWest)
 					{
 						node->ConnectTo(nodeSouthWest, 1.f * 1.414f);
@@ -70,7 +70,7 @@ namespace AIForGames
 					{
 						node->ConnectTo(nodeSouthEast, 1.f * 1.414f);
 						nodeSouthEast->ConnectTo(node, 1.f * 1.414f);
-					}*/
+					}
 				}
 			}
 		}
@@ -110,8 +110,8 @@ namespace AIForGames
 				Node *node = GetNode(x, y);
 				if (!node)
 				{
-					// Draws walls, (Unused)
-					//DrawRectangle((int)(x * m_cellSize), (int)(y * m_cellSize), (int)m_cellSize - 1, (int)m_cellSize - 1, cellColor);
+					// Draws walls
+					DrawRectangle((int)(x * m_cellSize), (int)(y * m_cellSize), (int)m_cellSize - 1, (int)m_cellSize - 1, cellColor);
 				}
 				else
 				{
