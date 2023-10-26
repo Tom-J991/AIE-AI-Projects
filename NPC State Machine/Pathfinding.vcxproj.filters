@@ -60,6 +60,9 @@
     <ClCompile Include="src\Behaviours\Conditions\Timer\TimerCondition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Behaviours\Attack\AttackBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pathfinding\Pathfinding.h">
@@ -108,6 +111,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Behaviours\Conditions\Timer\TimerCondition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Behaviours\Attack\AttackBehaviour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

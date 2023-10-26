@@ -7,7 +7,7 @@ namespace AIForGames
 {
 	void FollowBehaviour::Enter(Agent *agent)
 	{
-		agent->SetColor(RED);
+		agent->SetColor(BLUE);
 		agent->Reset();
 	}
 

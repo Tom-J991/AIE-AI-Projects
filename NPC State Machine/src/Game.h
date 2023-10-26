@@ -24,8 +24,8 @@ public:
 private:
 	bool m_avatar1Dead = false, m_avatar2Dead = false;
 
-	int m_avatar1Health = 4;
-	int m_avatar2Health = 4;
+	int m_avatar1Health = 0;
+	int m_avatar2Health = 0;
 
 	ResourceManager *m_resourceManager;
 

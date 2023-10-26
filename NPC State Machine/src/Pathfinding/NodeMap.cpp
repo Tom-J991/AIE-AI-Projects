@@ -100,8 +100,8 @@ namespace AIForGames
 
 	void NodeMap::Draw()
 	{
-		Color cellColor ={ 255, 0, 0, 255 };
-		Color lineColor ={ 128, 128, 128, 255 };
+		Color cellColor = { 150, 150, 150, 255 };
+		Color lineColor = { 80, 80, 80, 255 };
 
 		for (int y = 0; y < m_height; ++y)
 		{

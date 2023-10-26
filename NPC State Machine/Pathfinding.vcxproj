@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Behaviours\Attack\AttackBehaviour.cpp" />
     <ClCompile Include="src\Behaviours\Conditions\Timer\TimerCondition.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Pathfinding\Agent.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="src\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Behaviours\Attack\AttackBehaviour.h" />
     <ClInclude Include="src\Behaviours\Conditions\Timer\TimerCondition.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Pathfinding\Agent.h" />
