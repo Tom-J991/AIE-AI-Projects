@@ -1,9 +1,28 @@
+#include <iostream>
 #include <raylib.h>
 
 #include "Game.h"
 
+int difficulty = 0;
+
+void AskInput()
+{
+    std::cout << "Enter difficulty (1-4): " << std::endl;
+    std::cin >> difficulty;
+    if (difficulty <= 0 || difficulty > 4)
+    {
+        std::cout << "Try again." << std::endl;
+        AskInput();
+    }
+}
+
 int main() // Entry Point
 {
+    AskInput(); // Difficulty Input
+
+    if (difficulty <= 0)
+        return 0;
+
     // Setup Window
     const int gameWidth = 224; // Game resolution
     const int gameHeight = 288;
@@ -19,7 +38,7 @@ int main() // Entry Point
     InitAudioDevice();
 
     // Initialize Game
-    Game *game = new Game();
+    Game *game = new Game(difficulty);
     game->Init();
 
     // Main game loop

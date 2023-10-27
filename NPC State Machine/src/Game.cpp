@@ -1,9 +1,13 @@
 #include "Game.h"
 
+#include <iostream>
+
 #include <string>
 #include <sstream>
 #include <vector>
 #include <iomanip>
+
+#include "Globals.h"
 
 #include "Pathfinding/Pathfinding.h"
 #include "Pathfinding/NodeMap.h"
@@ -25,8 +29,11 @@ using namespace AIForGames;
 Agent *agent = nullptr;
 Agent *agent2 = nullptr;
 
-Game::Game()
+Game::Game(int difficulty)
 { 
+    std::cout << "Chosen Difficulty: " << difficulty << std::endl;
+    Globals::g_difficulty = difficulty;
+
     m_nodeMap = new NodeMap();
 
     m_resourceManager = new ResourceManager();
@@ -59,13 +66,27 @@ void Game::Init()
     m_nodeMap->SetCellSize(48);
     m_nodeMap->Initialize(asciiMap);
 
-    DistanceCondition* avatar1DistanceClose = new DistanceCondition(2.0f * m_nodeMap->GetCellSize(), true);
-    DistanceCondition* avatar1DistanceFar = new DistanceCondition(2.0f * m_nodeMap->GetCellSize(), false);
-    DistanceCondition* avatar2DistanceClose = new DistanceCondition(2.0f * m_nodeMap->GetCellSize(), true);
-    DistanceCondition* avatar2DistanceFar = new DistanceCondition(2.0f * m_nodeMap->GetCellSize(), false);
+    float dist = 2.0f;
+    if (Globals::g_difficulty > 1)
+    {
+        int mult = Globals::g_difficulty-1;
+        dist -= 0.5f * mult;
+    }
 
-    TimerCondition *avatar1Timer = new TimerCondition(2.0f);
-    TimerCondition *avatar2Timer = new TimerCondition(2.0f);
+    DistanceCondition* avatar1DistanceClose = new DistanceCondition(dist * m_nodeMap->GetCellSize(), true);
+    DistanceCondition* avatar1DistanceFar = new DistanceCondition(dist * m_nodeMap->GetCellSize(), false);
+    DistanceCondition* avatar2DistanceClose = new DistanceCondition(dist * m_nodeMap->GetCellSize(), true);
+    DistanceCondition* avatar2DistanceFar = new DistanceCondition(dist * m_nodeMap->GetCellSize(), false);
+
+    float time = 2.0f;
+    if (Globals::g_difficulty > 1)
+    {
+        int mult = Globals::g_difficulty-1;
+        time -= 0.5f * mult;
+    }
+
+    TimerCondition *avatar1Timer = new TimerCondition(time);
+    TimerCondition *avatar2Timer = new TimerCondition(time);
 
     State *avatar1WanderState = new State(new WanderBehaviour());
     State *avatar1FollowState = new State(new FollowBehaviour());
@@ -110,10 +131,32 @@ void Game::Init()
     agent2->SetSize(24);
     agent2->SetColor(GREEN);
 
+    if (Globals::g_difficulty > 2)
+    {
+        int mult = Globals::g_difficulty-2;
+        int speed = GetRandomValue(256, 256+(128*mult));
+        agent->SetSpeed(speed);
+        speed = GetRandomValue(256, 256+(128*mult));
+        agent2->SetSpeed(speed);
+    }
+
     m_avatar1Dead = false;
     m_avatar2Dead = false;
     m_avatar1Health = 4;
+    m_avatar1MaxHP = 4;
     m_avatar2Health = 4;
+    m_avatar2MaxHP = 4;
+
+    if (Globals::g_difficulty > 2)
+    {
+        int mult = Globals::g_difficulty-2;
+        int newHP = GetRandomValue(4, 4+(2*mult));
+        m_avatar1Health = newHP;
+        m_avatar1MaxHP = newHP;
+        newHP = GetRandomValue(4, 4+(2*mult));
+        m_avatar2Health = newHP;
+        m_avatar2MaxHP = newHP;
+    }
 }
 
 void Game::Cleanup()
@@ -148,7 +191,7 @@ void Game::Update(float deltaTime)
     }
 }
 
-void DrawAvatarHealth(Agent *agent, int &agentHealth)
+void DrawAvatarHealth(Agent *agent, int &agentHealth, int &maxHealth)
 {
     int offset = 64;
     int w = 64;
@@ -159,7 +202,7 @@ void DrawAvatarHealth(Agent *agent, int &agentHealth)
 
     DrawRectangle(x, y, w, h, RED); // Base
 
-    int wh = (int)(w * ((float)agentHealth / 4));
+    int wh = (int)(w * ((float)agentHealth / maxHealth));
 
     DrawRectangle(x, y, wh, h, GREEN); // Fill
 }
@@ -174,14 +217,14 @@ void Game::Draw()
     {
         agent->Draw();
         DrawText("1", agent->GetPosition().x-MeasureText("1", 24)/2, agent->GetPosition().y-12, 24, BLACK);
-        DrawAvatarHealth(agent, m_avatar1Health);
+        DrawAvatarHealth(agent, m_avatar1Health, m_avatar1MaxHP);
     }
 
     if (!m_avatar2Dead)
     {
         agent2->Draw();
         DrawText("2", agent2->GetPosition().x-MeasureText("2", 24)/2, agent2->GetPosition().y-12, 24, BLACK);
-        DrawAvatarHealth(agent2, m_avatar2Health);
+        DrawAvatarHealth(agent2, m_avatar2Health, m_avatar2MaxHP);
     }
 
     if (!m_avatar1Dead && m_avatar2Dead)

@@ -12,7 +12,7 @@ namespace AIForGames
 class Game
 {
 public:
-	Game();
+	Game(int difficulty = 1);
 	~Game();
 
 	void Init();
@@ -24,7 +24,9 @@ public:
 private:
 	bool m_avatar1Dead = false, m_avatar2Dead = false;
 
+	int m_avatar1MaxHP = 0;
 	int m_avatar1Health = 0;
+	int m_avatar2MaxHP = 0;
 	int m_avatar2Health = 0;
 
 	ResourceManager *m_resourceManager;
