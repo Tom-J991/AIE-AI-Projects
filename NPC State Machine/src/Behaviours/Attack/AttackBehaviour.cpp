@@ -22,6 +22,8 @@ namespace AIForGames
 			m_attackTime = GetRandomValue(1.0f, 1.0f+(0.5f*mult));
 		}
 
+		m_doDamage = true;
+
 		agent->SetColor(RED);
 		agent->Reset();
 	}
@@ -30,11 +32,12 @@ namespace AIForGames
 	{
 		Agent *target = agent->GetTarget();
 
-		if (m_attackClock >= m_attackTime * deltaTime)
+		if (m_attackClock >= m_attackTime * deltaTime && m_doDamage == true)
 		{
 			*m_enemyHealth -= m_damage;
 			std::cout << "Damage Dealt: " << m_damage << std::endl;
 
+			m_doDamage = false;
 			m_attackClock = 0.0f;
 		}
 

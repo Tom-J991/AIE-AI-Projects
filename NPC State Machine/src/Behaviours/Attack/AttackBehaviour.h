@@ -25,6 +25,8 @@ namespace AIForGames
 		float m_attackClock = 0.0f;
 		float m_attackTime = 1.0f;
 
+		bool m_doDamage = false;
+
 	};
 
 }
