@@ -20,7 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Behaviours\Attack\AttackBehaviour.cpp" />
+    <ClCompile Include="src\Behaviours\Conditions\FlagCheck\FlagCheckCondition.cpp" />
+    <ClCompile Include="src\Behaviours\Conditions\Health\HealthCondition.cpp" />
+    <ClCompile Include="src\Behaviours\Conditions\RandomTimer\RandomTimerCondition.cpp" />
     <ClCompile Include="src\Behaviours\Conditions\Timer\TimerCondition.cpp" />
+    <ClCompile Include="src\Behaviours\Flee\FleeBehaviour.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Pathfinding\Agent.cpp" />
     <ClCompile Include="src\Behaviours\Follow\FollowBehaviour.cpp" />
@@ -38,7 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Behaviours\Attack\AttackBehaviour.h" />
+    <ClInclude Include="src\Behaviours\Conditions\FlagCheck\FlagCheckCondition.h" />
+    <ClInclude Include="src\Behaviours\Conditions\Health\HealthCondition.h" />
+    <ClInclude Include="src\Behaviours\Conditions\RandomTimer\RandomTimerCondition.h" />
     <ClInclude Include="src\Behaviours\Conditions\Timer\TimerCondition.h" />
+    <ClInclude Include="src\Behaviours\Flee\FleeBehaviour.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Pathfinding\Agent.h" />

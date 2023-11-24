@@ -19,6 +19,8 @@ namespace AIForGames
 		void SetNodeMap(NodeMap *nodeMap) { m_nodeMap = nodeMap; }
 
 		void SetNode(Node *node) { m_currentNode = node; m_position = node->position; }
+
+		float GetSpeed() const { return m_speed; }
 		void SetSpeed(float speed) { m_speed = speed; }
 
 		std::vector<Node*> &GetPath() { return m_path; }

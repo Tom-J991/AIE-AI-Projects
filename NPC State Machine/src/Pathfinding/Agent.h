@@ -38,6 +38,7 @@ namespace AIForGames
 
 		NodeMap *GetNodeMap() const { return m_nodeMap; }
 
+		float GetSpeed() const { return m_pathAgent.GetSpeed(); }
 		void SetSpeed(float speed) { m_pathAgent.SetSpeed(speed); }
 
 		glm::vec2 GetPosition() const { return m_pathAgent.GetPosition(); }

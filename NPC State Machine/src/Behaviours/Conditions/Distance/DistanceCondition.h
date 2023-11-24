@@ -7,13 +7,13 @@ namespace AIForGames
 	class DistanceCondition : public Condition
 	{
 	public:
-		DistanceCondition(float d, bool lt) : m_distance(d), m_lessThan(lt) { }
+		DistanceCondition(float distance, bool lessThan = true) : m_distance(distance), m_lessThan(lessThan) { }
 
 		virtual bool IsTrue(Agent *agent, float deltaTime) override;
 
 	private:
 		float m_distance;
-		bool m_lessThan;
+		bool m_lessThan = true;
 
 	};
 

@@ -9,7 +9,7 @@ namespace AIForGames
 	class AttackBehaviour : public Behaviour
 	{
 	public:
-		AttackBehaviour(int *enemyHealth) : m_enemyHealth(enemyHealth)
+		AttackBehaviour(int *enemyHealth, bool *attackFlag) : m_enemyHealth(enemyHealth), m_avatarAttackFlag(attackFlag)
 		{ }
 
 		virtual void Enter(Agent *agent) override;
@@ -26,6 +26,8 @@ namespace AIForGames
 		float m_attackTime = 1.0f;
 
 		bool m_doDamage = false;
+
+		bool *m_avatarAttackFlag;
 
 	};
 

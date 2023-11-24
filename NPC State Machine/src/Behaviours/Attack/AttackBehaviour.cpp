@@ -24,6 +24,8 @@ namespace AIForGames
 
 		m_doDamage = true;
 
+		*m_avatarAttackFlag = true;
+
 		agent->SetColor(RED);
 		agent->Reset();
 	}
@@ -37,6 +39,8 @@ namespace AIForGames
 			*m_enemyHealth -= m_damage;
 			std::cout << "Damage Dealt: " << m_damage << std::endl;
 
+			*m_avatarAttackFlag = false;
+
 			m_doDamage = false;
 			m_attackClock = 0.0f;
 		}
@@ -46,7 +50,6 @@ namespace AIForGames
 
 	void AttackBehaviour::Exit(Agent *agent)
 	{
-
 	}
 
 	float AttackBehaviour::Evaluate(Agent *agent)
