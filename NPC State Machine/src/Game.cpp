@@ -126,9 +126,9 @@ void Game::Init()
     }
 
     DistanceCondition* avatar1DistanceClose = new DistanceCondition(dist * m_nodeMap->GetCellSize(), true);
-    DistanceCondition* avatar1DistanceFar = new DistanceCondition(dist * m_nodeMap->GetCellSize(), false);
+    DistanceCondition* avatar1DistanceFar = new DistanceCondition(dist * 4 * m_nodeMap->GetCellSize(), false);
     DistanceCondition* avatar2DistanceClose = new DistanceCondition(dist * m_nodeMap->GetCellSize(), true);
-    DistanceCondition* avatar2DistanceFar = new DistanceCondition(dist * m_nodeMap->GetCellSize(), false);
+    DistanceCondition* avatar2DistanceFar = new DistanceCondition(dist * 4 * m_nodeMap->GetCellSize(), false);
 
     float time = 4.0f;
     if (Globals::g_difficulty > 1)
@@ -158,7 +158,7 @@ void Game::Init()
     State *avatar2ChaseState = new State(new FollowBehaviour());
     State *avatar2AttackState = new State(new AttackBehaviour(&m_avatar1Health, &m_avatar2IsAttacking));
 
-    FiniteStateMachine *avatar1FSM = new FiniteStateMachine(avatar1IdleState);
+    FiniteStateMachine *avatar1FSM = new FiniteStateMachine(avatar1WanderState);
     avatar1FSM->AddState(avatar1IdleState);
     avatar1FSM->AddState(avatar1WanderState);
     avatar1FSM->AddState(avatar1FleeState);
@@ -169,7 +169,6 @@ void Game::Init()
     avatar1IdleState->AddTransition(avatar1LowHealth, avatar1FleeState);
     avatar1IdleState->AddTransition(avatar1DistanceClose, avatar1AttackState);
     avatar1FleeState->AddTransition(avatar1DistanceFar, avatar1WanderState);
-    avatar1FleeState->AddTransition(avatar1DistanceClose, avatar1AttackState);
     avatar1WanderState->AddTransition(avatar1Timer, avatar1IdleState);
     avatar1WanderState->AddTransition(avatar1Timer, avatar1ChaseState);
     avatar1ChaseState->AddTransition(avatar1Timer, avatar1WanderState);
@@ -177,7 +176,7 @@ void Game::Init()
     avatar1AttackState->AddTransition(avatar1AttackCheck, avatar1WanderState);
     avatar1AttackState->AddTransition(avatar1LowHealth, avatar1FleeState);
 
-    FiniteStateMachine *avatar2FSM = new FiniteStateMachine(avatar2IdleState);
+    FiniteStateMachine *avatar2FSM = new FiniteStateMachine(avatar2WanderState);
     avatar2FSM->AddState(avatar2IdleState);
     avatar2FSM->AddState(avatar2WanderState);
     avatar2FSM->AddState(avatar2FleeState);
@@ -188,7 +187,6 @@ void Game::Init()
     avatar2IdleState->AddTransition(avatar2LowHealth, avatar2FleeState);
     avatar2IdleState->AddTransition(avatar2DistanceClose, avatar2AttackState);
     avatar2FleeState->AddTransition(avatar2DistanceFar, avatar2WanderState);
-    avatar2FleeState->AddTransition(avatar2DistanceClose, avatar2AttackState);
     avatar2WanderState->AddTransition(avatar2Timer, avatar2IdleState);
     avatar2WanderState->AddTransition(avatar2Timer, avatar2ChaseState);
     avatar2ChaseState->AddTransition(avatar2Timer, avatar2WanderState);
@@ -202,11 +200,13 @@ void Game::Init()
     agent->SetNode(m_nodeMap->GetRandomNode());
     agent->SetTarget(agent2);
     agent->SetSize(24);
+    agent->SetSpeed(256);
     agent->SetColor(PINK);
 
     agent2->SetNode(m_nodeMap->GetRandomNode());
     agent2->SetTarget(agent);
     agent2->SetSize(24);
+    agent2->SetSpeed(256);
     agent2->SetColor(PINK);
 
     if (Globals::g_difficulty > 2)

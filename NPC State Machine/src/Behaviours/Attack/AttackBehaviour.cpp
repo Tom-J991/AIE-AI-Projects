@@ -43,6 +43,13 @@ namespace AIForGames
 
 		if (m_attackClock >= m_attackTime * deltaTime && m_doDamage == true)
 		{
+			if (*m_enemyHealth <= 0)
+			{
+				m_doDamage = false;
+				m_attackClock = 0.0f;
+				return;
+			}
+
 			*m_enemyHealth -= m_damage;
 			std::cout << "Damage Dealt: " << m_damage << std::endl;
 
