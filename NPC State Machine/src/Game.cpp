@@ -16,6 +16,7 @@
 #include "Behaviours/State.h"
 #include "Behaviours/FiniteStateMachine.h"
 
+#include "Behaviours/Idle/IdleBehaviour.h"
 #include "Behaviours/Wander/WanderBehaviour.h"
 #include "Behaviours/Flee/FleeBehaviour.h"
 #include "Behaviours/Follow/FollowBehaviour.h"
@@ -30,6 +31,8 @@
 
 using namespace AIForGames;
 
+bool musicTrigger = false;
+
 Agent *agent = nullptr;
 Agent *agent2 = nullptr;
 
@@ -40,12 +43,35 @@ Game::Game(int difficulty)
 
     m_nodeMap = new NodeMap();
 
-    m_resourceManager = new ResourceManager();
+    Globals::g_resourceManager = new ResourceManager();
+
+    Globals::g_resourceManager->AddMusic("FIGHT", "./res/bgm/fight_looped.ogg");
+    Globals::g_resourceManager->AddMusic("GAMEOVER", "./res/bgm/gameover.ogg");
+
+    Globals::g_resourceManager->AddSound("HIT1", "./res/sfx/hit05.ogg");
+    Globals::g_resourceManager->AddSound("HIT2", "./res/sfx/hit07.ogg");
+    Globals::g_resourceManager->AddSound("HIT3", "./res/sfx/hit08.ogg");
+    Globals::g_resourceManager->AddSound("HIT4", "./res/sfx/hit09.ogg");
+    Globals::g_resourceManager->AddSound("HIT5", "./res/sfx/hit10.ogg");
+    Globals::g_resourceManager->AddSound("HIT6", "./res/sfx/hit12.ogg");
+    Globals::g_resourceManager->AddSound("HIT7", "./res/sfx/hit19.ogg");
+    Globals::g_resourceManager->AddSound("HIT8", "./res/sfx/hit22.ogg");
+    Globals::g_resourceManager->AddSound("HIT9", "./res/sfx/hit28.ogg");
+
+    Globals::g_resourceManager->AddSound("MISS1", "./res/sfx/miss-3.ogg");
+    Globals::g_resourceManager->AddSound("MISS2", "./res/sfx/miss-4.ogg");
+    Globals::g_resourceManager->AddSound("MISS3", "./res/sfx/miss-7.ogg");
+    Globals::g_resourceManager->AddSound("MISS4", "./res/sfx/miss-8.ogg");
+    Globals::g_resourceManager->AddSound("MISS5", "./res/sfx/miss-10.ogg");
+
+    Globals::g_resourceManager->AddSound("CHEER", "./res/sfx/cheer.ogg");
 }
 Game::~Game()
 { 
+    Globals::g_resourceManager->Cleanup();
+
     delete m_nodeMap;
-    delete m_resourceManager;
+    delete Globals::g_resourceManager;
 }
 
 void Game::Init()
@@ -120,41 +146,53 @@ void Game::Init()
     HealthCondition *avatar1LowHealth = new HealthCondition(&m_avatar1Health, m_avatar1Health/3, false);
     HealthCondition *avatar2LowHealth = new HealthCondition(&m_avatar2Health, m_avatar2Health/3, false);
 
+    State *avatar1IdleState = new State(new IdleBehaviour());
     State *avatar1WanderState = new State(new WanderBehaviour());
     State *avatar1FleeState = new State(new FleeBehaviour());
     State *avatar1ChaseState = new State(new FollowBehaviour());
     State *avatar1AttackState = new State(new AttackBehaviour(&m_avatar2Health, &m_avatar1IsAttacking));
 
+    State *avatar2IdleState = new State(new IdleBehaviour());
     State *avatar2WanderState = new State(new WanderBehaviour());
     State *avatar2FleeState = new State(new FleeBehaviour());
     State *avatar2ChaseState = new State(new FollowBehaviour());
     State *avatar2AttackState = new State(new AttackBehaviour(&m_avatar1Health, &m_avatar2IsAttacking));
 
-    FiniteStateMachine *avatar1FSM = new FiniteStateMachine(avatar1WanderState);
+    FiniteStateMachine *avatar1FSM = new FiniteStateMachine(avatar1IdleState);
+    avatar1FSM->AddState(avatar1IdleState);
     avatar1FSM->AddState(avatar1WanderState);
     avatar1FSM->AddState(avatar1FleeState);
     avatar1FSM->AddState(avatar1ChaseState);
     avatar1FSM->AddState(avatar1AttackState);
 
-    avatar1WanderState->AddTransition(avatar1Timer, avatar1ChaseState);
-    avatar1WanderState->AddTransition(avatar1LowHealth, avatar1FleeState);
+    avatar1IdleState->AddTransition(avatar1Timer, avatar1WanderState);
+    avatar1IdleState->AddTransition(avatar1LowHealth, avatar1FleeState);
+    avatar1IdleState->AddTransition(avatar1DistanceClose, avatar1AttackState);
     avatar1FleeState->AddTransition(avatar1DistanceFar, avatar1WanderState);
-    avatar1ChaseState->AddTransition(avatar1DistanceClose, avatar1AttackState);
+    avatar1FleeState->AddTransition(avatar1DistanceClose, avatar1AttackState);
+    avatar1WanderState->AddTransition(avatar1Timer, avatar1IdleState);
+    avatar1WanderState->AddTransition(avatar1Timer, avatar1ChaseState);
     avatar1ChaseState->AddTransition(avatar1Timer, avatar1WanderState);
+    avatar1ChaseState->AddTransition(avatar1DistanceClose, avatar1AttackState);
     avatar1AttackState->AddTransition(avatar1AttackCheck, avatar1WanderState);
     avatar1AttackState->AddTransition(avatar1LowHealth, avatar1FleeState);
 
-    FiniteStateMachine *avatar2FSM = new FiniteStateMachine(avatar2WanderState);
+    FiniteStateMachine *avatar2FSM = new FiniteStateMachine(avatar2IdleState);
+    avatar2FSM->AddState(avatar2IdleState);
     avatar2FSM->AddState(avatar2WanderState);
     avatar2FSM->AddState(avatar2FleeState);
     avatar2FSM->AddState(avatar2ChaseState);
     avatar2FSM->AddState(avatar2AttackState);
 
-    avatar2WanderState->AddTransition(avatar2Timer, avatar2ChaseState);
-    avatar2WanderState->AddTransition(avatar2LowHealth, avatar2FleeState);
+    avatar2IdleState->AddTransition(avatar2Timer, avatar2WanderState);
+    avatar2IdleState->AddTransition(avatar2LowHealth, avatar2FleeState);
+    avatar2IdleState->AddTransition(avatar2DistanceClose, avatar2AttackState);
     avatar2FleeState->AddTransition(avatar2DistanceFar, avatar2WanderState);
-    avatar2ChaseState->AddTransition(avatar2DistanceClose, avatar2AttackState);
+    avatar2FleeState->AddTransition(avatar2DistanceClose, avatar2AttackState);
+    avatar2WanderState->AddTransition(avatar2Timer, avatar2IdleState);
+    avatar2WanderState->AddTransition(avatar2Timer, avatar2ChaseState);
     avatar2ChaseState->AddTransition(avatar2Timer, avatar2WanderState);
+    avatar2ChaseState->AddTransition(avatar2DistanceClose, avatar2AttackState);
     avatar2AttackState->AddTransition(avatar2AttackCheck, avatar2WanderState);
     avatar2AttackState->AddTransition(avatar2LowHealth, avatar2FleeState);
 
@@ -164,12 +202,12 @@ void Game::Init()
     agent->SetNode(m_nodeMap->GetRandomNode());
     agent->SetTarget(agent2);
     agent->SetSize(24);
-    agent->SetColor(GREEN);
+    agent->SetColor(PINK);
 
     agent2->SetNode(m_nodeMap->GetRandomNode());
     agent2->SetTarget(agent);
     agent2->SetSize(24);
-    agent2->SetColor(GREEN);
+    agent2->SetColor(PINK);
 
     if (Globals::g_difficulty > 2)
     {
@@ -179,6 +217,11 @@ void Game::Init()
         speed = GetRandomValue(256, 256+(128*mult));
         agent2->SetSpeed(speed);
     }
+
+    musicTrigger = false;
+    m_gameover = false;
+
+    PlayMusicStream(Globals::g_resourceManager->GetMusic("FIGHT"));
 }
 
 void Game::Cleanup()
@@ -186,15 +229,37 @@ void Game::Cleanup()
     delete agent;
     delete agent2;
 
-    m_resourceManager->Cleanup();
+    if (IsMusicStreamPlaying(Globals::g_resourceManager->GetMusic("FIGHT")))
+        StopMusicStream(Globals::g_resourceManager->GetMusic("FIGHT"));
+    else if (IsMusicStreamPlaying(Globals::g_resourceManager->GetMusic("GAMEOVER")))
+        StopMusicStream(Globals::g_resourceManager->GetMusic("GAMEOVER"));
 }
 
 void Game::Update(float deltaTime)
 {
     if (m_avatar1Health <= 0)
+    {
         m_avatar1Dead = true;
+        m_gameover = true;
+    }
     if (m_avatar2Health <= 0)
+    {
         m_avatar2Dead = true;
+        m_gameover = true;
+    }
+
+    if (m_gameover == true)
+    {
+        if (musicTrigger == false)
+        {
+            if (IsMusicStreamPlaying(Globals::g_resourceManager->GetMusic("FIGHT")))
+                StopMusicStream(Globals::g_resourceManager->GetMusic("FIGHT"));
+            PlayMusicStream(Globals::g_resourceManager->GetMusic("GAMEOVER"));
+            PlaySound(Globals::g_resourceManager->GetSound("CHEER"));
+
+            musicTrigger = true;
+        }
+    }
 
     if (!m_avatar1Dead)
     {
@@ -210,6 +275,11 @@ void Game::Update(float deltaTime)
         Cleanup();
         Init();
     }
+
+    if (IsMusicStreamPlaying(Globals::g_resourceManager->GetMusic("FIGHT")))
+        UpdateMusicStream(Globals::g_resourceManager->GetMusic("FIGHT"));
+    else if (IsMusicStreamPlaying(Globals::g_resourceManager->GetMusic("GAMEOVER")))
+        UpdateMusicStream(Globals::g_resourceManager->GetMusic("GAMEOVER"));
 }
 
 void DrawAvatarHealth(Agent *agent, int &agentHealth, int &maxHealth)

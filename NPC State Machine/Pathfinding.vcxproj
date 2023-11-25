@@ -25,6 +25,7 @@
     <ClCompile Include="src\Behaviours\Conditions\RandomTimer\RandomTimerCondition.cpp" />
     <ClCompile Include="src\Behaviours\Conditions\Timer\TimerCondition.cpp" />
     <ClCompile Include="src\Behaviours\Flee\FleeBehaviour.cpp" />
+    <ClCompile Include="src\Behaviours\Idle\IdleBehaviour.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Pathfinding\Agent.cpp" />
     <ClCompile Include="src\Behaviours\Follow\FollowBehaviour.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="src\Behaviours\Conditions\RandomTimer\RandomTimerCondition.h" />
     <ClInclude Include="src\Behaviours\Conditions\Timer\TimerCondition.h" />
     <ClInclude Include="src\Behaviours\Flee\FleeBehaviour.h" />
+    <ClInclude Include="src\Behaviours\Idle\IdleBehaviour.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Pathfinding\Agent.h" />

@@ -8,6 +8,13 @@
 #include "Pathfinding/NodeMap.h"
 #include "Pathfinding/Agent.h"
 
+const char *attackSFX[9] = {
+	"HIT1", "HIT2", "HIT3", "HIT4", "HIT5", "HIT6", "HIT7", "HIT8", "HIT9"
+};
+const char *missSFX[5] = {
+	"MISS1", "MISS2", "MISS3", "MISS4", "MISS5"
+};
+
 namespace AIForGames
 {
 	void AttackBehaviour::Enter(Agent *agent)
@@ -40,6 +47,12 @@ namespace AIForGames
 			std::cout << "Damage Dealt: " << m_damage << std::endl;
 
 			*m_avatarAttackFlag = false;
+
+			int rng = GetRandomValue(0, 8);
+			if (m_damage > 0)
+				PlaySound(Globals::g_resourceManager->GetSound(attackSFX[rng]));
+			else
+				PlaySound(Globals::g_resourceManager->GetSound(missSFX[rng % 5]));
 
 			m_doDamage = false;
 			m_attackClock = 0.0f;

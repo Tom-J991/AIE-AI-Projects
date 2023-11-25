@@ -1,0 +1,9 @@
+- bgm
+fight_looped : Ville Nousiainen : https://opengameart.org/content/fast-fight-battle-music : CC0
+gameover : Devlin Bataric : https://opengameart.org/content/69-game-over-jingles-pack : CC-BY 4.0
+
+- sfx
+hit* : Independent.nu : https://opengameart.org/content/37-hitspunches : CC0
+miss-* : artisticdude : https://opengameart.org/content/swishes-sound-pack : CC0
+cheer : jessepash : https://freesound.org/people/jessepash/sounds/139972/ : CC0
+cheer : zut50 : https://freesound.org/people/zut50/sounds/162395/ : CC0

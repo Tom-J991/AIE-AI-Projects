@@ -2,8 +2,6 @@
 
 #include <memory>
 
-#include "ResourceManager.h"
-
 namespace AIForGames
 {
 	class NodeMap;
@@ -32,7 +30,7 @@ private:
 	int m_avatar2Health = 0;
 	bool m_avatar2IsAttacking = false;
 
-	ResourceManager *m_resourceManager;
+	bool m_gameover = false;
 
 	AIForGames::NodeMap *m_nodeMap;
 

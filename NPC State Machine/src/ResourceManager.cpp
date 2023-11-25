@@ -35,10 +35,27 @@ void ResourceManager::AddSound(const char *key, Sound &sound)
 	m_loadedSounds.insert(std::make_pair(key, sound));
 }
 
+void ResourceManager::AddMusic(const char *key, const char *fileName)
+{
+	Music music = LoadMusicStream(fileName);
+	m_loadedMusic.insert(std::make_pair(key, music));
+}
+
+void ResourceManager::AddMusic(const char *key, Music &music)
+{
+	m_loadedMusic.insert(std::make_pair(key, music));
+}
+
 void ResourceManager::RemoveSound(const char *key)
 {
 	UnloadSound(m_loadedSounds[key]);
 	m_loadedSounds.erase(key);
+}
+
+void ResourceManager::RemoveMusic(const char *key)
+{
+	UnloadMusicStream(m_loadedMusic[key]);
+	m_loadedMusic.erase(key);
 }
 
 void ResourceManager::Cleanup()
@@ -50,4 +67,8 @@ void ResourceManager::Cleanup()
 	for (auto &[key, value] : m_loadedSounds)
 		UnloadSound(value);
 	m_loadedSounds.clear();
+
+	for (auto &[key, value] : m_loadedMusic)
+		UnloadMusicStream(value);
+	m_loadedMusic.clear();
 }
