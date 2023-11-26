@@ -14,7 +14,7 @@ namespace AIForGames
 
 	void IdleBehaviour::Update(Agent *agent, float deltaTime)
 	{
-
+		// Idle. Literally does nothing, what do you expect.
 	}
 
 	void IdleBehaviour::Exit(Agent *agent)

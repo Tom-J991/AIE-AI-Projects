@@ -15,6 +15,7 @@ namespace AIForGames
 	{
 		Agent *target = agent->GetTarget();
 
+		// Get the last target's position, go to it.
 		float dist = glm::distance(target->GetPosition(), lastTargetPosition);
 		if (dist > agent->GetNodeMap()->GetCellSize())
 		{

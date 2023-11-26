@@ -16,6 +16,7 @@ namespace AIForGames
 	{
 		if (agent->PathComplete())
 		{
+			// Find random spot, go to it.
 			Node *destination = agent->GetNodeMap()->GetRandomNode();
 			agent->GoToNode(destination);
 		}

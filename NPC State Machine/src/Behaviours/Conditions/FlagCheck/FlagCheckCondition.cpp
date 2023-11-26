@@ -8,6 +8,7 @@ namespace AIForGames
 {
 	bool FlagCheckCondition::IsTrue(Agent *agent, float deltaTime)
 	{
+		// Returns true if the given flag meets the given condition.
 		return *m_flagCheck == m_condition;
 	}
 

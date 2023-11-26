@@ -60,6 +60,7 @@ void ResourceManager::RemoveMusic(const char *key)
 
 void ResourceManager::Cleanup()
 {
+	// Loop through and unload everything.
 	for (auto &[key, value] : m_loadedTextures)
 		UnloadTexture(value);
 	m_loadedTextures.clear();

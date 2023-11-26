@@ -7,3 +7,4 @@ hit* : Independent.nu : https://opengameart.org/content/37-hitspunches : CC0
 miss-* : artisticdude : https://opengameart.org/content/swishes-sound-pack : CC0
 cheer : jessepash : https://freesound.org/people/jessepash/sounds/139972/ : CC0
 cheer : zut50 : https://freesound.org/people/zut50/sounds/162395/ : CC0
+boo : mglennsound : https://freesound.org/people/mglennsound/sounds/678537/ : CC0

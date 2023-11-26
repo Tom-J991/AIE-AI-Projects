@@ -3,16 +3,16 @@
 
 #include "Game.h"
 
-int difficulty = 0;
+int difficulty = 0; // Game difficulty.
 
 void AskInput()
 {
-    std::cout << "Enter difficulty (1-4): " << std::endl;
-    std::cin >> difficulty;
-    if (difficulty <= 0 || difficulty > 4)
+    std::cout << "Enter difficulty (1-4): " << std::endl; // Ask
+    std::cin >> difficulty; // Input
+    if (difficulty <= 0 || difficulty > 4) // Out of range.
     {
         std::cout << "Try again." << std::endl;
-        AskInput();
+        AskInput(); // Repeat.
     }
 }
 
@@ -20,8 +20,8 @@ int main() // Entry Point
 {
     AskInput(); // Difficulty Input
 
-    if (difficulty <= 0)
-        return 0;
+    if (difficulty <= 0) // Input failed?
+        return 0; // Just quit.
 
     // Setup Window
     const int gameWidth = 224; // Game resolution
@@ -35,10 +35,10 @@ int main() // Entry Point
     InitWindow(renderWidth, renderHeight, "State Machine");
     SetTargetFPS(60);
 
-    InitAudioDevice();
+    InitAudioDevice(); // Enable audio.
 
     // Initialize Game
-    Game *game = new Game(difficulty);
+    Game *game = new Game(difficulty); // Pass difficulty selection through to game.
     game->Init();
 
     // Main game loop

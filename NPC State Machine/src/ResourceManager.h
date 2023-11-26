@@ -4,6 +4,7 @@
 
 #include <raylib.h>
 
+// Helper class to easily access loaded resources.
 class ResourceManager
 {
 public:

@@ -4,6 +4,7 @@
 
 #include <vector>
 
+// Not used in this project, haha.
 namespace AIForGames
 {
 	class UtilityAI : public Behaviour

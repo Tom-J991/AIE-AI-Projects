@@ -8,6 +8,7 @@ namespace AIForGames
 {
 	void FleeBehaviour::Enter(Agent *agent)
 	{
+		// Double the avatar's speed.
 		m_storedSpeed = agent->GetSpeed();
 		agent->SetSpeed(m_storedSpeed * 2);
 
@@ -17,6 +18,7 @@ namespace AIForGames
 
 	void FleeBehaviour::Update(Agent *agent, float deltaTime)
 	{
+		// Same as the wander behavior.
 		if (agent->PathComplete())
 		{
 			Node *destination = agent->GetNodeMap()->GetRandomNode();
@@ -26,6 +28,7 @@ namespace AIForGames
 
 	void FleeBehaviour::Exit(Agent *agent)
 	{
+		// Set speed back to normal.
 		agent->SetSpeed(m_storedSpeed);
 	}
 
