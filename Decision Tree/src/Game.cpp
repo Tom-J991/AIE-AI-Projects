@@ -124,7 +124,7 @@ void Game::Init()
         m_avatar2MaxHP = newHP;
     }
 
-    // Setup FSM conditions for both avatars.
+    // Setup Decision tree conditions for both avatars.
     float dist = 8.0f;
     if (Globals::g_difficulty > 1) // If difficulty is above 1, randomize the distance checks a bit based on the difficulty.
     {
@@ -135,22 +135,6 @@ void Game::Init()
     DistanceCondition* avatar1AttackRange = new DistanceCondition(dist/4 * m_nodeMap->GetCellSize(), true);
     DistanceCondition* avatar2ChaseRange = new DistanceCondition(dist * m_nodeMap->GetCellSize(), true);
     DistanceCondition* avatar2AttackRange = new DistanceCondition(dist/4 * m_nodeMap->GetCellSize(), true);
-
-    // Old Stuff.
-    /*float time = 4.0f;
-    if (Globals::g_difficulty > 1) // If difficulty is above 1, randomize the time checks a bit based on the difficulty.
-    {
-        int mult = Globals::g_difficulty-1;
-        time -= 0.5f * mult;
-    }
-    RandomTimerCondition *avatar1Timer = new RandomTimerCondition(1.0f, time); // Set timer between 1 and max above, is true when clock counts up to it.
-    RandomTimerCondition *avatar2Timer = new RandomTimerCondition(1.0f, time);
-
-    FlagCheckCondition *avatar1AttackCheck = new FlagCheckCondition(&m_avatar1IsAttacking, false); // Checks whether avatar is not attacking.
-    FlagCheckCondition *avatar2AttackCheck = new FlagCheckCondition(&m_avatar2IsAttacking, false);
-
-    HealthCondition *avatar1LowHealth = new HealthCondition(&m_avatar1Health, m_avatar1MaxHP/3, false); // Checks whether avatar's health is below a third of it's max.
-    HealthCondition *avatar2LowHealth = new HealthCondition(&m_avatar2Health, m_avatar2MaxHP/3, false);*/
 
     // Setup states.
     Decision *avatar1WanderState = new WanderBehaviour();
